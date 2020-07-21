@@ -3,6 +3,7 @@
 #include <stdio.h> // for debug
 #include <stdlib.h>
 #include <math.h>
+#include "matlab.h"
 
 void getOneFrameResidualSpec(double *x, int xLen, int fs, int positionIndex, double framePeriod, double f0, double *specgram, int fftl, double *pulseLocations, int pCount,
 							double *residualSpec)
