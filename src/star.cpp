@@ -1,4 +1,4 @@
-#include "world.h"
+ï»¿#include "world.h"
 
 #include <stdio.h> // for debug
 #include <stdlib.h>
@@ -7,20 +7,20 @@
 void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 					double * sliceSTAR);
 
-// ƒTƒ“ƒvƒŠƒ“ƒOü”g”‚©‚ç•K—v‚ÈFFT’·‚ğŒvZ
-// –{“–‚Í‡¬‰¹º‚ÌÅ’áF0‚à•K—v‚¾‚¯‚Ç–³‹
+// ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°å‘¨æ³¢æ•°ã‹ã‚‰å¿…è¦ãªFFTé•·ã‚’è¨ˆç®—
+// æœ¬å½“ã¯åˆæˆéŸ³å£°ã®æœ€ä½F0ã‚‚å¿…è¦ã ã‘ã©ç„¡è¦–
 int getFFTLengthForStar(int fs)
 {
 	return (int)pow(2.0, 1.0+(int)(log(3.0*fs/FLOOR_F0+1) / log(2.0)));
 }
 
-// STAR‚É‚æ‚éƒXƒyƒNƒgƒ‹•ï—„’è
+// STARã«ã‚ˆã‚‹ã‚¹ãƒšã‚¯ãƒˆãƒ«åŒ…çµ¡æ¨å®š
 void star(double *x, int xLen, int fs, double *timeAxis, double *f0,
 		 double **specgram)
 {
 	int i,j;
 	double framePeriod = (timeAxis[1]-timeAxis[0])*1000.0;
-	double f0LowLimit = FLOOR_F0; // F0‚ªFLOOR HzˆÈ‰º‚Ìê‡‚Í–³º‰¹‚Æ‚µ‚Äˆµ‚¤
+	double f0LowLimit = FLOOR_F0; // F0ãŒFLOOR Hzä»¥ä¸‹ã®å ´åˆã¯ç„¡å£°éŸ³ã¨ã—ã¦æ‰±ã†
 	double currentF0;
 
 	int	fftl = (int)pow(2.0, 1.0+(int)(log(3.0*fs/f0LowLimit+1) / log(2.0)));
@@ -45,7 +45,7 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	int i,j;
 	double t0 = 1.0 / f0;
 
-	int *baseIndex, *index; // i•t‚«‚Ì‚à•ïŠÜ‚·‚é (Matlab”ÅQÆ)
+	int *baseIndex, *index; // iä»˜ãã®ã‚‚åŒ…å«ã™ã‚‹ (Matlabç‰ˆå‚ç…§)
 	int nFragment = (int)(0.5 + 3.0*(double)fs/f0/2.0);
 	baseIndex = (int *)malloc(sizeof(int) * (nFragment*2+1));
 	index  = (int *)malloc(sizeof(int) * (nFragment*2+1));
@@ -71,23 +71,23 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	average  = sqrt(average);
 	for(i = 0;i <= nFragment*2;i++) window[i]  /= average;
 
-	// ”gŒ`‚ÌƒXƒyƒNƒgƒ‹‚ğŒvZ
+	// æ³¢å½¢ã®ã‚¹ãƒšã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—
 	double				*waveform;
 	double				*powerSpec;
 	waveform  = (double *)malloc(sizeof(double) * fftl);
 	powerSpec = (double *)malloc(sizeof(double) * fftl);
 
-	fftw_plan			forwardFFT;	// FFTƒZƒbƒg
-	fftw_complex		*ySpec;		// ƒXƒyƒNƒgƒ‹
+	fftw_plan			forwardFFT;	// FFTã‚»ãƒƒãƒˆ
+	fftw_complex		*ySpec;		// ã‚¹ãƒšã‚¯ãƒˆãƒ«
 	ySpec = (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	forwardFFT = fftw_plan_dft_r2c_1d(fftl, waveform, ySpec, FFTW_ESTIMATE);
 
-	// ƒpƒ[ƒXƒyƒNƒgƒ‹‚ÌŒvZ
+	// ãƒ‘ãƒ¯ãƒ¼ã‚¹ãƒšã‚¯ãƒˆãƒ«ã®è¨ˆç®—
 	for(i = 0;i <= nFragment*2;i++) 
 		waveform[i] = segment[i] * window[i];
 	for(;i < fftl;i++) 
 		waveform[i] = 0.0;
-	fftw_execute(forwardFFT); // FFT‚ÌÀs
+	fftw_execute(forwardFFT); // FFTã®å®Ÿè¡Œ
 	for(i = 1;i <= fftl/2;i++) 
 		powerSpec[i] = ySpec[i][0]*ySpec[i][0] + ySpec[i][1]*ySpec[i][1];
 	powerSpec[0] = powerSpec[1];
@@ -99,13 +99,13 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	free(baseIndex); free(index);
 
 	// adroit smoothing
-	// –³‘Ê‚ğd•ª‚¯D
+	// ç„¡é§„ã‚’ä»•åˆ†ã‘ï¼
 	int limit;
 	limit = (int)(f0 / (fs/(double)fftl))+1;
 	double *dSpectrum, dFrequencyAxis, dShift;
 	dSpectrum		= (double *)malloc(sizeof(double) * (fftl+limit*2 + 1) );
 
-	// ŒvZƒRƒXƒg‚ğ­‚µ‚Å‚àŒ¸‚ç‚·
+	// è¨ˆç®—ã‚³ã‚¹ãƒˆã‚’å°‘ã—ã§ã‚‚æ¸›ã‚‰ã™
 	dFrequencyAxis = -((double)limit-0.5)*(double)fs/(double)fftl;
 	dShift = (double)fs/(double)fftl;
 

@@ -1,6 +1,6 @@
-#include "world.h"
+ï»¿#include "world.h"
 
-// “à•”ŠÖ”(ƒ†[ƒU‚ÍG‚ç‚È‚¢‚Ù‚¤‚ª—Ç‚¢)
+// å†…éƒ¨é–¢æ•°(ãƒ¦ãƒ¼ã‚¶ã¯è§¦ã‚‰ãªã„ã»ã†ãŒè‰¯ã„)
 void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen, 
 				   double *f0Deviations, double *interpolatedF0);
 void zeroCrossingEngine(double *x, int xLen, double fs,
@@ -13,59 +13,59 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1);
 void histc(double *x, int xLen, double *y, int yLen, int *index);
 
-// F0‹OÕ‚Ì—v‘f”‚ğ“¾‚éi–‘O‚Éƒ†[ƒU‚ªƒƒ‚ƒŠŠm•Û‚Å‚«‚é‚æ‚¤‚Éj
-// framePeriod ‚Ì’PˆÊ‚Ímsec
+// F0è»Œè·¡ã®è¦ç´ æ•°ã‚’å¾—ã‚‹ï¼ˆäº‹å‰ã«ãƒ¦ãƒ¼ã‚¶ãŒãƒ¡ãƒ¢ãƒªç¢ºä¿ã§ãã‚‹ã‚ˆã†ã«ï¼‰
+// framePeriod ã®å˜ä½ã¯msec
 int getSamplesForDIO(int fs, int xLen, double framePeriod)
 {
 	return (int)((double)xLen / (double)fs / (framePeriod/1000.0) ) + 1;
 }
 
-// DIO (Distributed Inline filter Operation) ‚É‚æ‚éF0„’è
-// x	: “ü—ÍM†
-// xLen : M†’· [sample].
-// f0	: „’èŒ‹‰Ê
+// DIO (Distributed Inline filter Operation) ã«ã‚ˆã‚‹F0æ¨å®š
+// x	: å…¥åŠ›ä¿¡å·
+// xLen : ä¿¡å·é•· [sample].
+// f0	: æ¨å®šçµæœ
 void dio(double *x, int xLen, int fs, double framePeriod, 
 		 double *timeAxis, double *f0)
 {
 	int i,j;
 
-	// ‰ŠúğŒ (‰ü—Ç‚µ‚½‚¢l‚Í‚±‚±‚©‚çŠæ’£‚Á‚Ä)
+	// åˆæœŸæ¡ä»¶ (æ”¹è‰¯ã—ãŸã„äººã¯ã“ã“ã‹ã‚‰é ‘å¼µã£ã¦)
 	double f0Floor = 80;
 	double f0Ceil = 640;
 	double channelsInOctave = 2;
 	double targetFs = 4000;
 
-	// Šî‘bƒpƒ‰ƒƒ^‚ÌŒvZ
+	// åŸºç¤ãƒ‘ãƒ©ãƒ¡ã‚¿ã®è¨ˆç®—
 	int decimationRatio = (int)(fs/targetFs);
 	double fss = (double)fs/(double)decimationRatio;
 	int nBands = (int)(log((double)f0Ceil/(double)f0Floor)/log(2.0) * channelsInOctave);
 
-	// ‚±‚±‚àŠî‘bƒpƒ‰ƒƒ^
+	// ã“ã“ã‚‚åŸºç¤ãƒ‘ãƒ©ãƒ¡ã‚¿
 	double * boundaryF0List = (double *)malloc(sizeof(double) * (nBands+1));
 	for(i = 0;i <= nBands;i++)
 		boundaryF0List[i] = f0Floor*pow(2.0, i/channelsInOctave);
 
-	// fft Length‚ÌŒvZ
+	// fft Lengthã®è¨ˆç®—
 	int yLen = (1 + (int)(xLen/decimationRatio));
 	int fftl = (int)pow(2.0, 1.0 + (int)(log((double)yLen + 
 		(double)(4*(int)(1.0 + (double)fs/boundaryF0List[0]/2.0)) ) / log(2.0)));
 	double *y = (double *)malloc(sizeof(double) * fftl);
 	
-	// ƒ_ƒEƒ“ƒTƒ“ƒvƒŠƒ“ƒO
+	// ãƒ€ã‚¦ãƒ³ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
 	decimateForF0(x, xLen, y, decimationRatio);
 
-	// ’¼—¬¬•ª‚Ìœ‹ y = y - mean(y)
+	// ç›´æµæˆåˆ†ã®é™¤å» y = y - mean(y)
 	double meanY = 0.0;
 	for(i = 0;i < yLen;i++)			meanY += y[i];
 	meanY /= (double)yLen;
 	for(i = 0;i < yLen;i++)			y[i] -= meanY;
 	for(i = yLen; i < fftl;i++)		y[i] = 0.0;
 
-	// ’†ŠÔƒf[ƒ^‚Ì•Û‘¶—p
-	int		tLen; // F0‹OÕ‚ÌƒTƒ“ƒvƒ‹”
+	// ä¸­é–“ãƒ‡ãƒ¼ã‚¿ã®ä¿å­˜ç”¨
+	int		tLen; // F0è»Œè·¡ã®ã‚µãƒ³ãƒ—ãƒ«æ•°
 	tLen = getSamplesForDIO(fs, xLen, framePeriod); // debug
 	int lengthInMs = 1 + (int)((double)xLen/(double)fs*1000.0);
-	double **stabilityMap, ** f0Map; // f0map‚ÉŒó•â‚ª‘S‚Ä“ü‚é‚Ì‚ÅCŒ‹‰Ê‚É”[“¾‚Å‚«‚È‚¢ê‡‚ÍCf0Map‚ğ’¼Ú‘€ì‚·‚éD
+	double **stabilityMap, ** f0Map; // f0mapã«å€™è£œãŒå…¨ã¦å…¥ã‚‹ã®ã§ï¼Œçµæœã«ç´å¾—ã§ããªã„å ´åˆã¯ï¼Œf0Mapã‚’ç›´æ¥æ“ä½œã™ã‚‹ï¼
 	stabilityMap = (double **)malloc(sizeof(double *) * (nBands+1));
 	f0Map		 = (double **)malloc(sizeof(double *) * (nBands+1));
 	for(i = 0;i <= nBands;i++)
@@ -74,14 +74,14 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 		f0Map[i]		= (double *)malloc(sizeof(double) * tLen);
 	}
 
-	// ”gŒ`‚ÌƒXƒyƒNƒgƒ‹‚ğ–‘O‚ÉŒvZi‚±‚±‚Í‚‘¬‰»‚Ì—]’n—L‚èj
-	fftw_plan			forwardFFT;				// FFTƒZƒbƒg
-	fftw_complex		*ySpec;	// ƒXƒyƒNƒgƒ‹
+	// æ³¢å½¢ã®ã‚¹ãƒšã‚¯ãƒˆãƒ«ã‚’äº‹å‰ã«è¨ˆç®—ï¼ˆã“ã“ã¯é«˜é€ŸåŒ–ã®ä½™åœ°æœ‰ã‚Šï¼‰
+	fftw_plan			forwardFFT;				// FFTã‚»ãƒƒãƒˆ
+	fftw_complex		*ySpec;	// ã‚¹ãƒšã‚¯ãƒˆãƒ«
 	ySpec = (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	forwardFFT = fftw_plan_dft_r2c_1d(fftl, y, ySpec, FFTW_ESTIMATE);
-	fftw_execute(forwardFFT); // FFT‚ÌÀs
+	fftw_execute(forwardFFT); // FFTã®å®Ÿè¡Œ
 
-	// ’áˆæ‚ÌƒJƒbƒg (2011”N1Œ4“úC³)
+	// ä½åŸŸã®ã‚«ãƒƒãƒˆ (2011å¹´1æœˆ4æ—¥ä¿®æ­£)
 
 
 	// temporary values
@@ -93,7 +93,7 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 	for(i = 0;i < tLen;i++)
 		timeAxis[i] = (double)i * framePeriod/1000.0;
 
-	// ƒCƒxƒ“ƒg‚ÌŒvZ (4‚Â‚Ìƒ[ƒŒğ·DÚ‚µ‚­‚Í˜_•¶‚É‚Ä)
+	// ã‚¤ãƒ™ãƒ³ãƒˆã®è¨ˆç®— (4ã¤ã®ã‚¼ãƒ­äº¤å·®ï¼è©³ã—ãã¯è«–æ–‡ã«ã¦)
 	for(i = 0;i <= nBands;i++)
 	{
 		rawEventByDio(boundaryF0List[i], fss, ySpec, yLen, fftl, framePeriod/1000.0, f0Floor, f0Ceil, timeAxis, tLen, 
@@ -105,10 +105,10 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 		}
 	}
 
-	// ƒxƒXƒgŒó•â‚Ì‘I’è (Šî–{”g‚ç‚µ‚³‚ğg‚¢ˆêˆÓ‚ÉŒˆ‚ß‚é)
+	// ãƒ™ã‚¹ãƒˆå€™è£œã®é¸å®š (åŸºæœ¬æ³¢ã‚‰ã—ã•ã‚’ä½¿ã„ä¸€æ„ã«æ±ºã‚ã‚‹)
 	double *bestF0;
 //	bestF0 = (double *)malloc(sizeof(double) * (int)((double)xLen / (double)fs / (framePeriod/1000.0) ) + 1);
-	bestF0 = (double *)malloc(sizeof(double) * tLen); // 2010/6/14 C³ (€‚É‚½‚¢)
+	bestF0 = (double *)malloc(sizeof(double) * tLen); // 2010/6/14 ä¿®æ­£ (æ­»ã«ãŸã„)
 
 	double tmp;
 	for(i = 0;i < tLen;i++)
@@ -125,10 +125,10 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 		}
 	}
 
-	// Œãˆ— (‘æˆêŒó•â‚ÆŒó•âƒ}ƒbƒv‚©‚çÅ“K‚ÈƒpƒX‚ğ’T‚·)
+	// å¾Œå‡¦ç† (ç¬¬ä¸€å€™è£œã¨å€™è£œãƒãƒƒãƒ—ã‹ã‚‰æœ€é©ãªãƒ‘ã‚¹ã‚’æ¢ã™)
 	postprocessing(framePeriod/1000.0, f0Floor, nBands+1, xLen, fs, f0Map, bestF0, f0);
 
-	// ‚¨•Ğ‚Ã‚¯(ƒƒ‚ƒŠ‚ÌŠJ•ú)
+	// ãŠç‰‡ã¥ã‘(ãƒ¡ãƒ¢ãƒªã®é–‹æ”¾)
 	free(bestF0);
 	free(interpolatedF0);
 	free(f0Deviations);
@@ -145,25 +145,25 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 	free(y);
 }
 
-// ƒCƒxƒ“ƒg”‚ª‚ ‚Á‚½‚©”»’è
-// long‚Ì”ÍˆÍ‚ğ’´‚¦‚Ä‚µ‚Ü‚Á‚½‚Ì‚Å‹ê“÷‚Ìô
+// ã‚¤ãƒ™ãƒ³ãƒˆæ•°ãŒã‚ã£ãŸã‹åˆ¤å®š
+// longã®ç¯„å›²ã‚’è¶…ãˆã¦ã—ã¾ã£ãŸã®ã§è‹¦è‚‰ã®ç­–
 int checkEvent(int x)
 {
 	if(x > 0) return 1;
 	return 0;
 }
 
-// Œãˆ—i4ƒXƒeƒbƒvj
+// å¾Œå‡¦ç†ï¼ˆ4ã‚¹ãƒ†ãƒƒãƒ—ï¼‰
 void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen, int fs, double **f0Map, double *bestF0,
 					double *f0)
 {
 	int i, j, k;
 	int voiceRangeMinimum = (int)(0.5 + 1.0/framePeriod/f0Floor);
 	int f0Len = (int)((double)xLen / (double)fs / framePeriod) + 1;
-//	double allowedRange = 0.1; // ‚±‚ê‚Í5 msec‚ÌŠî€‚È‚Ì‚ÅframePeriod‚É•¹‚¹‚Ä’²®‚·‚éD
-	double allowedRange = 0.1 * framePeriod/0.005; // ‚±‚ê‚Í5 msec‚ÌŠî€‚È‚Ì‚ÅframePeriod‚É•¹‚¹‚Ä’²®‚·‚éD
+//	double allowedRange = 0.1; // ã“ã‚Œã¯5 msecã®åŸºæº–ãªã®ã§framePeriodã«ä½µã›ã¦èª¿æ•´ã™ã‚‹ï¼
+	double allowedRange = 0.1 * framePeriod/0.005; // ã“ã‚Œã¯5 msecã®åŸºæº–ãªã®ã§framePeriodã«ä½µã›ã¦èª¿æ•´ã™ã‚‹ï¼
 
-	// ƒƒ‚ƒŠß–ñ‚Í‚Å‚«‚é‚¯‚ÇC‚Ç‚¤‚¹­—Ê‚È‚Ì‚ÅƒfƒoƒbƒO‚Ì‚µ‚â‚·‚³‚ğ—Dæ
+	// ãƒ¡ãƒ¢ãƒªç¯€ç´„ã¯ã§ãã‚‹ã‘ã©ï¼Œã©ã†ã›å°‘é‡ãªã®ã§ãƒ‡ãƒãƒƒã‚°ã®ã—ã‚„ã™ã•ã‚’å„ªå…ˆ
 	double *f0Base;
 	f0Base = (double *)malloc(sizeof(double) * f0Len);
 	double *f0Step1;
@@ -175,18 +175,18 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 	double *f0Step4;
 	f0Step4 = (double *)malloc(sizeof(double) * f0Len);
 
-	// ‚Ü‚¸‚Í‰Šú‰»
+	// ã¾ãšã¯åˆæœŸåŒ–
 	for(i = 0;i < voiceRangeMinimum;i++) f0Base[i] = 0;
 	for(;i < f0Len-voiceRangeMinimum;i++) f0Base[i] = bestF0[i];
 	for(;i < f0Len;i++) f0Base[i] = 0;
 	for(i = 0;i < f0Len;i++) f0Step1[i] = 0.0;
 
-	// ‘æˆê‚ÌƒXƒeƒbƒv (F0‚Ì’µ–ô–h~)
+	// ç¬¬ä¸€ã®ã‚¹ãƒ†ãƒƒãƒ— (F0ã®è·³èºé˜²æ­¢)
 	for(i = voiceRangeMinimum;i < f0Len;i++)
 		if(fabs((f0Base[i]-f0Base[i-1])/(0.00001+f0Base[i]) ) < allowedRange)
 			f0Step1[i] = f0Base[i];
 
-	// ‘æ“ñ‚ÌƒXƒeƒbƒv (–³º‹æŠÔ‚ÌØ‚è—£‚µ)
+	// ç¬¬äºŒã®ã‚¹ãƒ†ãƒƒãƒ— (ç„¡å£°åŒºé–“ã®åˆ‡ã‚Šé›¢ã—)
 	for(i = 0;i < f0Len;i++) f0Step2[i] = f0Step1[i];
 	for(i = voiceRangeMinimum;i < f0Len;i++)
 	{
@@ -200,7 +200,7 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 		}
 	}
 
-	// “‡”‚ÌŒŸo
+	// å³¶æ•°ã®æ¤œå‡º
 	int *positiveIndex, *negativeIndex;
 	positiveIndex = (int *)malloc(sizeof(int) * f0Len);
 	negativeIndex = (int *)malloc(sizeof(int) * f0Len);
@@ -214,7 +214,7 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 			positiveIndex[positiveCount++] = i;
 	}
 
-	// ƒXƒeƒbƒv3i‘OŒü‚«•â³j
+	// ã‚¹ãƒ†ãƒƒãƒ—3ï¼ˆå‰å‘ãè£œæ­£ï¼‰
 	double refValue1, refValue2, bestError, errorValue;
 	for(i = 0;i < f0Len;i++) f0Step3[i] = f0Step2[i];
 	for(i = 0;i < negativeCount;i++)
@@ -249,7 +249,7 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 		}
 	}
 
-	// ƒXƒeƒbƒv4iŒãŒü‚«•â³j
+	// ã‚¹ãƒ†ãƒƒãƒ—4ï¼ˆå¾Œå‘ãè£œæ­£ï¼‰
 	for(i = 0;i < f0Len;i++) f0Step4[i] = f0Step3[i];
 	for(i = positiveCount-1;i >= 0;i--)
 	{
@@ -281,10 +281,10 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 		}
 	}
 
-	// ƒRƒs[
+	// ã‚³ãƒ”ãƒ¼
 	for(i = 0;i < f0Len;i++) f0[i] = f0Step4[i];
-/* ƒXƒeƒbƒv5‚ÍC«”\‚ªã‚ª‚ç‚È‚¢‚Ì‚Åˆê“I‚Éíœ
-	// ƒXƒeƒbƒv5iŒÇ—§“‡‚ÌØ‚è—£‚µ 2‰ñ–Új
+/* ã‚¹ãƒ†ãƒƒãƒ—5ã¯ï¼Œæ€§èƒ½ãŒä¸ŠãŒã‚‰ãªã„ã®ã§ä¸€æ™‚çš„ã«å‰Šé™¤
+	// ã‚¹ãƒ†ãƒƒãƒ—5ï¼ˆå­¤ç«‹å³¶ã®åˆ‡ã‚Šé›¢ã— 2å›ç›®ï¼‰
 	int voiceRangeMinimum2 = 2+(int)(voiceRangeMinimum/2);
 	for(i = 0;i < f0Len;i++) f0[i] = f0Step4[i];
 	for(i = voiceRangeMinimum2; i < f0Len-voiceRangeMinimum2;i++)
@@ -303,13 +303,13 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 			0 : f0Step4[i];
 	}
 */
-	// ƒƒ‚ƒŠ‚ÌŠJ•ú
+	// ãƒ¡ãƒ¢ãƒªã®é–‹æ”¾
 	free(f0Base);
 	free(f0Step1); free(f0Step2); free(f0Step3); free(f0Step4);
 	free(positiveIndex); free(negativeIndex);
 }
 
-// ƒCƒxƒ“ƒg‚ğŒvZ‚·‚é“à•”ŠÖ” (“à•”•Ï”‚È‚Ì‚Åˆø”E–ß‚è’l‚Éè‰ÁŒ¸‚È‚µ)
+// ã‚¤ãƒ™ãƒ³ãƒˆã‚’è¨ˆç®—ã™ã‚‹å†…éƒ¨é–¢æ•° (å†…éƒ¨å¤‰æ•°ãªã®ã§å¼•æ•°ãƒ»æˆ»ã‚Šå€¤ã«æ‰‹åŠ æ¸›ãªã—)
 void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double framePeriod, double f0Floor, double f0Ceil, double *timeAxis, int tLen, 
 				   double *f0Deviations, double *interpolatedF0)
 {
@@ -321,13 +321,13 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	for(i = halfAverageLength*2;i < fftl;i++) equivalentFIR[i] = 0.0;
 	nuttallWindow(halfAverageLength*4, equivalentFIR);
 
-	fftw_plan			forwardFFT;				// FFTƒZƒbƒg
-	fftw_complex		*eSpec;	// ƒXƒyƒNƒgƒ‹
+	fftw_plan			forwardFFT;				// FFTã‚»ãƒƒãƒˆ
+	fftw_complex		*eSpec;	// ã‚¹ãƒšã‚¯ãƒˆãƒ«
 	eSpec = (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	forwardFFT = fftw_plan_dft_r2c_1d(fftl, equivalentFIR, eSpec, FFTW_ESTIMATE);
-	fftw_execute(forwardFFT); // FFT‚ÌÀs
+	fftw_execute(forwardFFT); // FFTã®å®Ÿè¡Œ
 
-	// •¡‘f”‚ÌŠ|‚¯Z
+	// è¤‡ç´ æ•°ã®æ›ã‘ç®—
 	double tmp;
 	for(i = 0;i <= fftl-1;i++)
 	{
@@ -336,19 +336,19 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 		eSpec[i][0] = tmp;
 	}
 
-	// ’áˆæ’Ê‰ßƒtƒBƒ‹ƒ^ƒŠƒ“ƒO
+	// ä½åŸŸé€šéãƒ•ã‚£ãƒ«ã‚¿ãƒªãƒ³ã‚°
 	fftw_plan	 inverseFFT;
 	inverseFFT = fftw_plan_dft_c2r_1d(fftl, eSpec, equivalentFIR, FFTW_ESTIMATE);
 	fftw_execute(inverseFFT);
-	// ƒoƒCƒAƒXi’áˆæ’Ê‰ßƒtƒBƒ‹ƒ^‚É‚æ‚é’x‰„j‚Ìœ‹
+	// ãƒã‚¤ã‚¢ã‚¹ï¼ˆä½åŸŸé€šéãƒ•ã‚£ãƒ«ã‚¿ã«ã‚ˆã‚‹é…å»¶ï¼‰ã®é™¤å»
 	for(i = 0;i < xLength;i++) equivalentFIR[i] = equivalentFIR[i+indexBias];
 
-	// ‚S‚Â‚Ìƒ[ƒŒğ·(\‘¢‘Ì‚Ì‚Ù‚¤‚ª‚¢‚¢‚Ë) e:event, i:interval
+	// ï¼”ã¤ã®ã‚¼ãƒ­äº¤å·®(æ§‹é€ ä½“ã®ã»ã†ãŒã„ã„ã­) e:event, i:interval
 	double *nELocations, *pELocations, *dnELocations, *dpELocations;
 	double *nILocations, *pILocations, *dnILocations, *dpILocations;
 	double *nIntervals, *pIntervals, *dnIntervals, *dpIntervals;
 	int nLen, pLen, dnLen, dpLen;
-	nELocations = (double *)malloc(sizeof(double) * xLength); // xLength‚Í‚©‚È‚è‚Ì•ÛŒ¯
+	nELocations = (double *)malloc(sizeof(double) * xLength); // xLengthã¯ã‹ãªã‚Šã®ä¿é™º
 	pELocations = (double *)malloc(sizeof(double) * xLength);
 	dnELocations = (double *)malloc(sizeof(double) * xLength);
 	dpELocations = (double *)malloc(sizeof(double) * xLength);
@@ -383,7 +383,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 
 	double *interpolatedF0Set[4];
 	if(usableChannel <= 0) 
-	{ // ƒm[Œó•â‚ÅƒtƒBƒjƒbƒVƒ…‚Å‚·
+	{ // ãƒãƒ¼å€™è£œã§ãƒ•ã‚£ãƒ‹ãƒƒã‚·ãƒ¥ã§ã™
 		for(i = 0;i < tLen;i++)
 		{
 			f0Deviations[i] = 100000.0;
@@ -394,7 +394,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	{
 		for(i = 0;i < 4;i++)
 			interpolatedF0Set[i] = (double *)malloc(sizeof(double) * tLen);
-		// 4‚Â‚Ìƒ[ƒŒğ·
+		// 4ã¤ã®ã‚¼ãƒ­äº¤å·®
 		interp1(nILocations , nIntervals , nLen , timeAxis, tLen, interpolatedF0Set[0]);
 		interp1(pILocations , pIntervals , pLen , timeAxis, tLen, interpolatedF0Set[1]);
 		interp1(dnILocations, dnIntervals, dnLen, timeAxis, tLen, interpolatedF0Set[2]);
@@ -411,7 +411,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 				+ (interpolatedF0Set[3][i]-interpolatedF0[i])*(interpolatedF0Set[3][i]-interpolatedF0[i])) / 3.0);
 
 			if(interpolatedF0[i] > boundaryF0 || interpolatedF0[i] < boundaryF0/2.0 
-				|| interpolatedF0[i] > f0Ceil || interpolatedF0[i] < FLOOR_F0) // 70 HzˆÈ‰º‚ÍF0‚Æ‚µ‚È‚¢D
+				|| interpolatedF0[i] > f0Ceil || interpolatedF0[i] < FLOOR_F0) // 70 Hzä»¥ä¸‹ã¯F0ã¨ã—ãªã„ï¼
 			{
 				interpolatedF0[i] = 0.0;
 				f0Deviations[i]   = 100000.0;
@@ -422,7 +422,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	}
 
 
-	// ƒƒ‚ƒŠ‚ÌŠJ•ú
+	// ãƒ¡ãƒ¢ãƒªã®é–‹æ”¾
 	free(nELocations); free(pELocations); free(dnELocations); free(dpELocations);
 	free(nILocations); free(pILocations); free(dnILocations); free(dpILocations);
 	free(nIntervals); free(pIntervals); free(dnIntervals); free(dpIntervals);
@@ -432,7 +432,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	free(equivalentFIR);
 }
 
-// ƒ[ƒŒğ·‚ğŒvZ
+// ã‚¼ãƒ­äº¤å·®ã‚’è¨ˆç®—
 void zeroCrossingEngine(double *x, int xLen, double fs,
 						double *eLocations, double *iLocations, double *intervals, int *iLen)
 {
@@ -441,7 +441,7 @@ void zeroCrossingEngine(double *x, int xLen, double fs,
 	negativeGoingPoints = (int *)malloc(sizeof(int) * xLen);
 
 	int tmp1, tmp2;
-	for(i = 0;i < xLen-1;i++) // –ˆ‰ñ—]‚è‚ğŒvZ‚·‚é‚Ì‚Í–³‘Ê
+	for(i = 0;i < xLen-1;i++) // æ¯å›ä½™ã‚Šã‚’è¨ˆç®—ã™ã‚‹ã®ã¯ç„¡é§„
 	{
 		tmp1 = x[i]*x[i+1] < 0 ? 1 : 0;
 		tmp2 = x[i+1] < x[i]   ? 1 : 0;
@@ -449,7 +449,7 @@ void zeroCrossingEngine(double *x, int xLen, double fs,
 	}
 	negativeGoingPoints[xLen-1] = 0;
 
-	// —LŒøƒCƒxƒ“ƒg‚ÌŒŸo
+	// æœ‰åŠ¹ã‚¤ãƒ™ãƒ³ãƒˆã®æ¤œå‡º
 	int *edges;
 	edges = (int *)malloc(sizeof(int) * xLen);
 	int count = 0;
@@ -457,7 +457,7 @@ void zeroCrossingEngine(double *x, int xLen, double fs,
 	{
 		if(negativeGoingPoints[i] > 0) edges[count++] = negativeGoingPoints[i];
 	}
-	// ÅI–ß‚è’l‚ÌŒvZ€”õ
+	// æœ€çµ‚æˆ»ã‚Šå€¤ã®è¨ˆç®—æº–å‚™
 	double *fineEdges;
 	fineEdges = (double *)malloc(sizeof(double) * count);
 	for(i = 0;i < count;i++)
@@ -479,7 +479,7 @@ void zeroCrossingEngine(double *x, int xLen, double fs,
 	free(negativeGoingPoints);
 }
 
-// ƒiƒbƒg[ƒ‹‘‹Dƒ}ƒWƒbƒNƒiƒ“ƒo[‚Ì‚æ‚¤‚ÉŒ©‚¦‚é‚¯‚Ç‚±‚ê‚ª³‰ğD
+// ãƒŠãƒƒãƒˆãƒ¼ãƒ«çª“ï¼ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼ã®ã‚ˆã†ã«è¦‹ãˆã‚‹ã‘ã©ã“ã‚ŒãŒæ­£è§£ï¼
 void nuttallWindow(int yLen, double *y)
 {
 	int i;

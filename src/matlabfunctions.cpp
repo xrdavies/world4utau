@@ -1,4 +1,4 @@
-// Matlab‚©‚çˆÚA‚µ‚½ŠÖ”‚ÌŠñ‚¹W‚ß
+// Matlabã‹ã‚‰ç§»æ¤ã—ãŸé–¢æ•°ã®å¯„ã›é›†ã‚
 #include <math.h>
 #include "world.h"
 
@@ -42,7 +42,7 @@ void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 	s = (double *)malloc(sizeof(double) * oLen);
 	k = (int   *)malloc(sizeof(int)   * oLen);
 	
-	// ‰Šúİ’è
+	// åˆæœŸè¨­å®š
 	for(i = 0;i < iLen-1;i++) h[i] = t[i+1]-t[i];
 	for(i = 0;i < oLen;i++) {p[i] = i; k[i] = 0;}
 
@@ -67,7 +67,7 @@ void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 long decimateForF0(double *x, int xLen, double *y, int r)
 {
 //	int r = 11;
-	int nfact = 9; // ‘½•ª‚±‚ê‚ÍŒÅ’è‚ÅOK
+	int nfact = 9; // å¤šåˆ†ã“ã‚Œã¯å›ºå®šã§OK
 	double *tmp1, *tmp2;
 	tmp1 = (double *)malloc(sizeof(double) * (xLen + nfact*2));
 	tmp2 = (double *)malloc(sizeof(double) * (xLen + nfact*2));
@@ -99,7 +99,7 @@ void filterForDecimate(double *x, int xLen, double *y, int r)
 {
 	double w[3], wt;
 	w[0] = w[1] = w[2] = 0.0;
-	double a[3], b[2]; // ƒtƒBƒ‹ƒ^ŒW” (rˆË‘¶)
+	double a[3], b[2]; // ãƒ•ã‚£ãƒ«ã‚¿ä¿‚æ•° (rä¾å­˜)
 
 	switch(r)
 	{
@@ -163,7 +163,7 @@ void filterForDecimate(double *x, int xLen, double *y, int r)
 	}
 }
 
-// matlab‚É‡‚¸‚éŠÛ‚ß
+// matlabã«é †ãšã‚‹ä¸¸ã‚
 int round(double x)
 {
 	if(x > 0)
@@ -172,7 +172,7 @@ int round(double x)
 		return (int)(x-0.5);
 }
 
-// ·•ª
+// å·®åˆ†
 void diff(double *x, int xLength, double *ans)
 {
 	for(int i = 0;i < xLength-1;i++)
@@ -183,8 +183,8 @@ void diff(double *x, int xLength, double *ans)
 }
 
 
-// ƒTƒ“ƒvƒŠƒ“ƒOŠÔŠu‚ª“™ŠÔŠu‚ÉŒÀ’è‚µ‚‘¬‚É“®ì‚·‚éinterp1D
-// Šî–{“I‚É‚Í“¯‚¶‚¾‚ªC”z—ñ‚Ì—v‘f”‚ğ–¾¦“I‚Éw’è‚·‚é•K—v‚ª‚ ‚éD
+// ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°é–“éš”ãŒç­‰é–“éš”ã«é™å®šã—é«˜é€Ÿã«å‹•ä½œã™ã‚‹interp1ï¼
+// åŸºæœ¬çš„ã«ã¯åŒã˜ã ãŒï¼Œé…åˆ—ã®è¦ç´ æ•°ã‚’æ˜ç¤ºçš„ã«æŒ‡å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
 void interp1Q(double x, double shift, double *y, int xLength, double *xi, int xiLength, double *ans)
 {
 	double deltaX;
@@ -215,7 +215,7 @@ void interp1Q(double x, double shift, double *y, int xLength, double *xi, int xi
 	free(deltaY);
 }
 
-// xorshift–@‚Æ’†S‹ÉŒÀ’è—‚Æ‚Ì‘g‚İ‡‚í‚¹
+// xorshiftæ³•ã¨ä¸­å¿ƒæ¥µé™å®šç†ã¨ã®çµ„ã¿åˆã‚ã›
 float randn(void) 
 {
 	static unsigned int x = 123456789;
@@ -240,8 +240,8 @@ float randn(void)
 	return (float)tmp / 268435456.0f - 6.0f;
 }
 
-// fftfiltŠÖ”‚ÌˆÚA
-// y‚ÍCfftl•ª‚Ì’·‚³‚ğŠm•Û‚·‚é‚±‚ÆD
+// fftfilté–¢æ•°ã®ç§»æ¤
+// yã¯ï¼Œfftlåˆ†ã®é•·ã•ã‚’ç¢ºä¿ã™ã‚‹ã“ã¨ï¼
 void fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y)
 {
 	int i;
@@ -283,7 +283,7 @@ void fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y)
 	fftw_destroy_plan(inverseFFT);
 }
 
-// 2ŸŒ³”z—ñ (n*n)‚Ì‹ts—ñ‚ğŒvZDƒƒ‚ƒŠ‚ÍŠm•Û‚µ‚Ä‚¨‚­‚±‚Æ
+// 2æ¬¡å…ƒé…åˆ— (n*n)ã®é€†è¡Œåˆ—ã‚’è¨ˆç®—ï¼ãƒ¡ãƒ¢ãƒªã¯ç¢ºä¿ã—ã¦ãŠãã“ã¨
 void inv(double **r, int n, double **invr)
 {
 	int i,j,k;
@@ -298,7 +298,7 @@ void inv(double **r, int n, double **invr)
 	}
 	for(i = 0;i < n;i++) invr[i][i] = 1.0;
 
-	// ”z—ñ‚Ì‰Šú‰»
+	// é…åˆ—ã®åˆæœŸåŒ–
 	//
 	for(i = 0;i < n;i++)
 	{
@@ -313,7 +313,7 @@ void inv(double **r, int n, double **invr)
 		}
 	}
 
-	// ‚±‚ê‚Å”¼•ªŠ®—¹
+	// ã“ã‚Œã§åŠåˆ†å®Œäº†
 	for(i = n-1;i >= 0;i--)
 	{
 		for(j = 0;j < i;j++)

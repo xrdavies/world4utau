@@ -1,4 +1,4 @@
-#include "world.h"
+ï»¿#include "world.h"
 
 #include <stdio.h> // for debug
 #include <stdlib.h>
@@ -45,8 +45,8 @@ void getOneFrameResidualSpec(double *x, int xLen, int fs, int positionIndex, dou
 	for(;i < fftl;i++)
 		tmpWave[i] = 0.0;
 
-	fftw_plan			forwardFFT;	// FFTƒZƒbƒg
-	fftw_complex		*tmpSpec, *starSpec, *ceps;		// ƒXƒyƒNƒgƒ‹
+	fftw_plan			forwardFFT;	// FFTã‚»ãƒƒãƒˆ
+	fftw_complex		*tmpSpec, *starSpec, *ceps;		// ã‚¹ãƒšã‚¯ãƒˆãƒ«
 	tmpSpec		= (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	starSpec	= (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	ceps		= (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
@@ -142,7 +142,7 @@ void getWedgeList(double *x, int xLen, int vuvNum, int *stList, int *edList, int
 	free(tmpWav);
 }
 
-// PLATINUM Version 0.0.4. ‹°‚ç‚­‚±‚ÌŽd—l‚ÅŠm’è‚Å‚·D
+// PLATINUM Version 0.0.4. æã‚‰ãã“ã®ä»•æ§˜ã§ç¢ºå®šã§ã™ï¼Ž
 // Aperiodicity estimation based on PLATINUM
 
 void platinum(double *x, int xLen, int fs, double *timeAxis, double *f0, double **specgram, 
@@ -160,7 +160,7 @@ void platinum(double *x, int xLen, int fs, double *timeAxis, double *f0, double 
 	{
 		if(f0[i]!=0.0 && f0[i-1]==0.0) vuvNum++;
 	}
-	vuvNum+=vuvNum-1; // “‡”‚Ì’²® (—Lº“‡‚Æ–³º“‡)
+	vuvNum+=vuvNum-1; // å³¶æ•°ã®èª¿æ•´ (æœ‰å£°å³¶ã¨ç„¡å£°å³¶)
 	if(f0[0] == 0) vuvNum++;
 	if(f0[tLen-1] == 0) vuvNum++;
 

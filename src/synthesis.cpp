@@ -1,10 +1,10 @@
-#include "world.h"
+ï»¿#include "world.h"
 
 #include <stdio.h> // for debug
 #include <stdlib.h>
 #include <float.h>
 
-// spectrum, cepstrum‚Í–ˆ‰ñmalloc, free‚·‚é‚Ì‚ª–Ê“|‚¾‚©‚çD
+// spectrum, cepstrumã¯æ¯å›malloc, freeã™ã‚‹ã®ãŒé¢å€’ã ã‹ã‚‰ï¼
 /*
 int getOneFrameSegment(double *f0, int tLen, double **specgram, double **aperiodicity, int fftl, double framePeriod, double currentTime, int fs, double defaultF0,
 						fftw_complex *spectrum, fftw_complex *cepstrum, 
@@ -19,7 +19,7 @@ void getMinimumPhaseSpectrum(double *inputSpec, fftw_complex *spectrum, fftw_com
 	forwardFFT = fftw_plan_dft_1d(fftl, spectrum, cepstrum, FFTW_FORWARD, FFTW_ESTIMATE);
 	inverseFFT = fftw_plan_dft_1d(fftl, cepstrum, spectrum, FFTW_BACKWARD, FFTW_ESTIMATE);
 
-	// ’l‚ğæ‚èo‚·
+	// å€¤ã‚’å–ã‚Šå‡ºã™
 	for(i = 0;i <= fftl/2;i++)	
 	{
 		spectrum[i][0] = log(inputSpec[i]?inputSpec[i]:1.0e-20)/2.0;
@@ -51,14 +51,14 @@ void getMinimumPhaseSpectrum(double *inputSpec, fftw_complex *spectrum, fftw_com
 	}
 }
 
-// “Á’è‚Ì‰“š‚ğæ“¾‚·‚éD
+// ç‰¹å®šæ™‚åˆ»ã®å¿œç­”ã‚’å–å¾—ã™ã‚‹ï¼
 void getOneFrameSegment(double *f0, int tLen, double **specgram, double **residualSpecgram, int fftl, double framePeriod, double currentTime, int fs, double defaultF0,
 						fftw_complex *spectrum, fftw_complex *cepstrum, 
 						double *response, int xLen)
 {
 	int i;
 	double real, imag, tmp;
-	fftw_plan	inverseFFT_RP;				// FFTƒZƒbƒg
+	fftw_plan	inverseFFT_RP;				// FFTã‚»ãƒƒãƒˆ
 
 	int currentFrame, currentPosition;
 
@@ -69,7 +69,7 @@ void getOneFrameSegment(double *f0, int tLen, double **specgram, double **residu
 
 	tmp = currentTime + 1.0/(f0[currentFrame] == 0.0 ? defaultF0 : f0[currentFrame]);
 
-	// ’l‚ğæ‚èo‚·
+	// å€¤ã‚’å–ã‚Šå‡ºã™
 	getMinimumPhaseSpectrum(specgram[currentFrame], spectrum, cepstrum, fftl);
 
 	spectrum[0][0] *= residualSpecgram[currentFrame][0];
@@ -95,7 +95,7 @@ void synthesis(double *f0, int tLen, double **specgram, double **residualSpecgra
 	int i,j;
 	double *impulseResponse;
 	impulseResponse = (double *)malloc(sizeof(double) * fftl);
-	fftw_complex		*cepstrum, *spectrum;	// ƒPƒvƒXƒgƒ‰ƒ€‚ÆƒXƒyƒNƒgƒ‹
+	fftw_complex		*cepstrum, *spectrum;	// ã‚±ãƒ—ã‚¹ãƒˆãƒ©ãƒ ã¨ã‚¹ãƒšã‚¯ãƒˆãƒ«
 	cepstrum = (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 	spectrum = (fftw_complex *)malloc(sizeof(fftw_complex) * fftl);
 
@@ -104,7 +104,7 @@ void synthesis(double *f0, int tLen, double **specgram, double **residualSpecgra
 	int currentFrame = 0;
 	for(i = 0;;i++)
 	{
-		for(j = 0;j < fftl;j++) impulseResponse[j] = 0.0; // ”z—ñ‚Í–ˆ‰ñ‰Šú‰»
+		for(j = 0;j < fftl;j++) impulseResponse[j] = 0.0; // é…åˆ—ã¯æ¯å›åˆæœŸåŒ–
 
 		getOneFrameSegment(f0, tLen, specgram, residualSpecgram, fftl, framePeriod, currentTime, fs, DEFAULT_F0,
 						spectrum, cepstrum, impulseResponse, xLen);
@@ -117,7 +117,7 @@ void synthesis(double *f0, int tLen, double **specgram, double **residualSpecgra
 			synthesisOut[j+currentPosition] += impulseResponse[j];
 		}
 
-		// XV
+		// æ›´æ–°
 		currentTime += 1.0/(f0[currentFrame] == 0.0 ? DEFAULT_F0 : f0[currentFrame]);
 		currentFrame = (int)(currentTime/(framePeriod/1000.0) + 0.5);
 		currentPosition = (int)(currentTime*(double)fs);

@@ -1,18 +1,30 @@
-// ‰¹º•ªÍ‡¬–@ WORLD by M. Morise
+ï»¿// éŸ³å£°åˆ†æåˆæˆæ³• WORLD by M. Morise
 //
-// FFTW‚ğg‚¤‚Ì‚ÅC•Ê“rƒCƒ“ƒXƒg[ƒ‹‚ª•K—v‚Å‚·D
+// FFTWã‚’ä½¿ã†ã®ã§ï¼Œåˆ¥é€”ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãŒå¿…è¦ã§ã™ï¼
 //
 
-// Œ»ó‚Å•ª‚©‚Á‚Ä‚¢‚éƒoƒO
-// decimateForF0 : ŠJn’¼ŒãEI—¹ŠÔÛ4ƒTƒ“ƒvƒ‹‚­‚ç‚¢‚ÉŒë·‚ª“ü‚è‚Ü‚·D
+// ç¾çŠ¶ã§åˆ†ã‹ã£ã¦ã„ã‚‹ãƒã‚°
+// decimateForF0 : é–‹å§‹ç›´å¾Œãƒ»çµ‚äº†é–“éš›4ã‚µãƒ³ãƒ—ãƒ«ãã‚‰ã„ã«èª¤å·®ãŒå…¥ã‚Šã¾ã™ï¼
+
+// è¯­éŸ³åˆ†æå’Œåˆæˆæ–¹æ³•WORLDï¼Œä½œè€…ï¼šMã€‚Morise
+//
+// ç”±äºå®ƒä½¿ç”¨FFTWï¼Œå› æ­¤æ‚¨éœ€è¦å•ç‹¬å®‰è£…ã€‚
+//
+
+// å·²çŸ¥é”™è¯¯
+// decimateForF0ï¼šå¤§çº¦åœ¨å¼€å§‹ä¹‹åå’Œç»“æŸä¹‹å‰æœ‰4ä¸ªæ ·æœ¬å­˜åœ¨é”™è¯¯ã€‚
 
 #include "fftw3.h"
 #include <stdlib.h>
 #include <windows.h>
 #include <math.h>
 
-//ƒƒ‚ƒŠƒŠ[ƒNƒ`ƒFƒbƒNF
-//* VS2008‚Æ‚©‚¾‚Æ’Ê‚ç‚È‚¢‚©‚à‚µ‚ê‚È‚¢‚Ì‚Å‚»‚Ìê‡‚ÍƒRƒƒ“ƒg‚É‚·‚é‚±‚ÆB
+//ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯ãƒã‚§ãƒƒã‚¯ï¼š
+//* VS2008ã¨ã‹ã ã¨é€šã‚‰ãªã„ã‹ã‚‚ã—ã‚Œãªã„ã®ã§ãã®å ´åˆã¯ã‚³ãƒ¡ãƒ³ãƒˆã«ã™ã‚‹ã“ã¨ã€‚
+
+//å†…å­˜æ³„æ¼æ£€æŸ¥ï¼š
+// *å¦‚æœæ˜¯VS2008ï¼Œåˆ™å¯èƒ½æ— æ³•é€šè¿‡ï¼Œå› æ­¤åœ¨è¿™ç§æƒ…å†µä¸‹è¯·å¯¹å…¶è¿›è¡Œæ³¨é‡Šã€‚
+
 #ifdef WIN32
  #ifndef _CRTDBG_MAP_ALLOC
   #define _CRTDBG_MAP_ALLOC
@@ -23,7 +35,8 @@
 //*/
 #define PI 3.1415926535897932384
 
-// windows‚È‚ç‚Å‚Í
+// windowsãªã‚‰ã§ã¯
+// Windowsç‰¹æœ‰çš„
 #pragma warning( disable : 4996 )
 
 #pragma comment(lib, "libfftw3-3.lib")
@@ -33,22 +46,27 @@
 #define FLOOR_F0 71.0
 #define DEFAULT_F0 150.0
 #define LOW_LIMIT 65.0
-// 71‚ÍCfs: 44100‚É‚¨‚¢‚ÄFFT’·‚ğ2048‚É‚Å‚«‚é‰ºŒÀD
-// 70 Hz‚É‚·‚é‚Æ4096“_•K—v‚É‚È‚éD
-// DEFAULT_F0‚ÍC0.0.4‚Å‚ÌV‹@”\D’²®‚Ì—]’n‚Í‚ ‚é‚ªCb’è“I‚ÉŒˆ’è‚·‚éD
+// 71ã¯ï¼Œfs: 44100ã«ãŠã„ã¦FFTé•·ã‚’2048ã«ã§ãã‚‹ä¸‹é™ï¼
+// 70 Hzã«ã™ã‚‹ã¨4096ç‚¹å¿…è¦ã«ãªã‚‹ï¼
+// DEFAULT_F0ã¯ï¼Œ0.0.4ã§ã®æ–°æ©Ÿèƒ½ï¼èª¿æ•´ã®ä½™åœ°ã¯ã‚ã‚‹ãŒï¼Œæš«å®šçš„ã«æ±ºå®šã™ã‚‹ï¼
 
-// F0„’è–@ DIO : Distributed Inline-filter Operation
+// 71æ˜¯å¯ä»¥å°†FFTé•¿åº¦è®¾ç½®ä¸ºfsçš„ä¸‹é™ï¼š2048ï¼š44100ã€‚
+// 70 Hzéœ€è¦4096ç‚¹ã€‚
+// DEFAULT_F0æ˜¯0.0.4ä¸­çš„æ–°åŠŸèƒ½ã€‚ æœ‰è°ƒæ•´çš„ç©ºé—´ï¼Œä½†æ˜¯å°†æš‚æ—¶ç¡®å®šã€‚
+
+// F0æ¨å®šæ³• DIO : Distributed Inline-filter Operation
 void dio(double *x, int xLen, int fs, double framePeriod, 
 		 double *timeAxis, double *f0);
 int getSamplesForDIO(int fs, int xLen, double framePeriod);
 
-// ƒXƒyƒNƒgƒ‹•ï—„’è–@ STAR : Synchronous Technique and Adroit Restoration
+// ã‚¹ãƒšã‚¯ãƒˆãƒ«åŒ…çµ¡æ¨å®šæ³• STAR : Synchronous Technique and Adroit Restoration
+//é¢‘è°±åŒ…ç»œä¼°è®¡æ–¹æ³•STARï¼šSynchronous Technique and Adroit Restoration
 int getFFTLengthForStar(int fs);
 void star(double *x, int xLen, int fs, double *timeAxis, double *f0,
 		  double **specgram);
 void getMinimumPhaseSpectrum(double *inputSpec, fftw_complex *spectrum, fftw_complex *cepstrum, int fftl);
 
-// ”ñüŠú«w•W„’è–@ PLATINUM : –¼Ì–¢’è
+// éå‘¨æœŸæ€§æŒ‡æ¨™æ¨å®šæ³• PLATINUM : åç§°æœªå®š
 void platinum(double *x, int xLen, int fs, double *timeAxis, double *f0, double **specgram, 
 		 double **residualSpecgram);
 
@@ -59,7 +77,8 @@ void synthesis(double *f0, int tLen, double **specgram, double **residualSpecgra
 void getMinimumPhaseSpectrum(double *inputSpec, fftw_complex *spectrum, fftw_complex *cepstrum, int fftl);
 
 //------------------------------------------------------------------------------------
-// Matlab ŠÖ”‚ÌˆÚA
+// Matlab é–¢æ•°ã®ç§»æ¤
+// Matlabå‡½æ•°ç§»æ¤
 double std(double *x, int xLen);
 void inv(double **r, int n, double **invr);
 void fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y);

@@ -1,29 +1,56 @@
-/*
- * ¦‚±‚ÌƒvƒƒOƒ‰ƒ€‚ÍGPL (General Public License)‚Åƒ‰ƒCƒZƒ“ƒX‚³‚ê‚Ä‚¢‚Ü‚·D
- * ƒ‰ƒCƒZƒ“ƒX‚Ì“à—e‚ÍCcopying.txt‚ğ‚²Šm”F‚­‚¾‚³‚¢D
- * ˆÈ‰ºAWORLD(0.0.4)‚Ìreadme.txt‚æ‚èˆø—pB
- * > ’ˆÓ‚·‚×‚«‚ÍˆÈ‰º‚Ì2“_‚Å‚·D
- * > E–{ƒvƒƒOƒ‰ƒ€‚ğ—˜—p‚µ‚Äì‚Á‚½ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÍC
- * > @ƒ\[ƒXƒR[ƒh‚àˆê‚É”z•z‚·‚é•K—v‚ª‚ ‚éD
- * > E‚»‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚àGPLƒ‰ƒCƒZƒ“ƒX‚É‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢D
+ï»¿/*
+ * *æ­¤ç¨‹åºæ˜¯æ ¹æ®GPLï¼ˆé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰è®¸å¯çš„ã€‚
+ *è¯·æ£€æŸ¥copying.txtä»¥è·å–è®¸å¯è¯çš„å†…å®¹ã€‚
+ *ä»¥ä¸‹å¼•è‡ªWORLDï¼ˆ0.0.4ï¼‰çš„readme.txtã€‚
+ *>æœ‰ä¸¤ç‚¹éœ€è¦æ³¨æ„ã€‚
+ *>-ä½¿ç”¨è¯¥ç¨‹åºåˆ›å»ºçš„åº”ç”¨ç¨‹åºæ˜¯
+ *>ä¹Ÿå¿…é¡»åˆ†å‘æºä»£ç ã€‚
+ *>-è¯¥åº”ç”¨ç¨‹åºè¿˜å¿…é¡»å…·æœ‰GPLè®¸å¯è¯ã€‚
  */
 //
 // world4utau.cpp
 //
-//‚±‚Ìƒ\[ƒXƒR[ƒh‚ÍWORLD0.0.4‚Ìtest.cpp‚ğŒ³‚É‚µ‚Ä‚¢‚Ü‚·
-//ˆø”
-// 1 “ü—Íƒtƒ@ƒCƒ‹iOKj
-// 2 o—Íƒtƒ@ƒCƒ‹iOKj
-// 3 ‰¹ŠKiOKj
-// 4 ƒ^ƒCƒ€ƒp[ƒZƒ“ƒg¨Velocity
-// 5 ƒtƒ‰ƒO@t,g,P À‘•
-// 6 ƒIƒtƒZƒbƒg
-// 7 ’·‚³F—v‹’·
-// 8 ‘O”¼‚ÌŒÅ’è•”•ª fixed
-// 9 ÅŒã‚Ìg—p‚µ‚È‚¢•”•ªBƒ}ƒCƒiƒX‚Ìê‡offset‚©‚ç‚Ìg—p•”•ª blank
-// 10 ƒ{ƒŠƒ…[ƒ€ (OK) volm
-// 11 ƒ‚ƒWƒ…ƒŒ[ƒVƒ‡ƒ“ (OK) modulation
-// 12~ ƒsƒbƒ`ƒxƒ“ƒh  pitches
+//æ­¤æºä»£ç åŸºäºWORLD 0.0.4 test.cpp
+//è®ºæ®
+// 1ä¸ªè¾“å…¥æ–‡ä»¶ï¼ˆç¡®å®šï¼‰
+// 2ä¸ªè¾“å‡ºæ–‡ä»¶ï¼ˆç¡®å®šï¼‰
+// 3åˆ»åº¦ï¼ˆç¡®å®šï¼‰
+// 4ï¼…çš„é€Ÿåº¦â†’é€Ÿåº¦
+// 5ä¸ªæ ‡å¿—tï¼Œgï¼ŒPå®ç°
+// 6åç§»
+// 7ä¸ªé•¿åº¦ï¼šè¯·æ±‚é•¿åº¦
+// 8ä¸ªå›ºå®šçš„ä¸ŠåŠéƒ¨åˆ†
+// 9æœ€åæœªä½¿ç”¨çš„éƒ¨åˆ†ã€‚å¦‚æœä¸ºè´Ÿï¼Œåˆ™åç§»ä½¿ç”¨çš„éƒ¨åˆ†ä¸ºç©ºç™½
+// 10å·ï¼ˆOKï¼‰å·
+// 11è°ƒåˆ¶ï¼ˆOKï¼‰è°ƒåˆ¶
+// 12ã€œå¼¯éŸ³
+
+/*
+ * â€»ã“ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã¯GPL (General Public License)ã§ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã•ã‚Œã¦ã„ã¾ã™ï¼
+ * ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã®å†…å®¹ã¯ï¼Œcopying.txtã‚’ã”ç¢ºèªãã ã•ã„ï¼
+ * ä»¥ä¸‹ã€WORLD(0.0.4)ã®readme.txtã‚ˆã‚Šå¼•ç”¨ã€‚
+ * > æ³¨æ„ã™ã¹ãã¯ä»¥ä¸‹ã®2ç‚¹ã§ã™ï¼
+ * > ãƒ»æœ¬ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’åˆ©ç”¨ã—ã¦ä½œã£ãŸã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã¯ï¼Œ
+ * > ã€€ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã‚‚ä¸€ç·’ã«é…å¸ƒã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
+ * > ãƒ»ãã®ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚‚GPLãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã«ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ï¼
+ */
+//
+// world4utau.cpp
+//
+//ã“ã®ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã¯WORLD0.0.4ã®test.cppã‚’å…ƒã«ã—ã¦ã„ã¾ã™
+//å¼•æ•°
+// 1 å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆOKï¼‰
+// 2 å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆOKï¼‰
+// 3 éŸ³éšï¼ˆOKï¼‰
+// 4 ã‚¿ã‚¤ãƒ ãƒ‘ãƒ¼ã‚»ãƒ³ãƒˆâ†’Velocity
+// 5 ãƒ•ãƒ©ã‚°ã€€t,g,P å®Ÿè£…
+// 6 ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+// 7 é•·ã•ï¼šè¦æ±‚é•·
+// 8 å‰åŠã®å›ºå®šéƒ¨åˆ† fixed
+// 9 æœ€å¾Œã®ä½¿ç”¨ã—ãªã„éƒ¨åˆ†ã€‚ãƒã‚¤ãƒŠã‚¹ã®å ´åˆoffsetã‹ã‚‰ã®ä½¿ç”¨éƒ¨åˆ† blank
+// 10 ãƒœãƒªãƒ¥ãƒ¼ãƒ  (OK) volm
+// 11 ãƒ¢ã‚¸ãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ (OK) modulation
+// 12~ ãƒ”ãƒƒãƒãƒ™ãƒ³ãƒ‰  pitches
 
 
 #include <stdio.h>
@@ -38,7 +65,8 @@
 #include <float.h>
 #include <memory.h>
 
-// •ªÍƒVƒtƒg—Ê [msec]
+//åˆ†æç§»ä½é‡[æ¯«ç§’]
+// åˆ†æã‚·ãƒ•ãƒˆé‡ [msec]
 //#define FRAMEPERIOD 2.0
 #define FRAMEPERIOD 5.80498866213152
 
@@ -151,7 +179,7 @@ double name2freq(char *tname, int trim)
 		
 		num  = (n + oct * 12 - 21) * 10 + trim;
 		//return num;
-		//0 ‚Å 55Hz
+		//0 ã§ 55Hz
 		return 55.0 * pow(2, (double)num/120.0);
 	}
 	return 0;
@@ -164,7 +192,8 @@ void makeFilename(const char *filename, const char *ext, char *output)
 	if (cp) *cp = 0;
 	strcat(output, ext);
 }
-//TODO •ªÍƒtƒ@ƒCƒ‹‚ª‘µ‚Á‚Ä‚½‚çwave‚Í“Ç‚Ü‚È‚­‚Ä—Ç‚¢Bi¡‚Í•K‚¸“Ç‚ñ‚Å‚éj
+//TODO åˆ†æãƒ•ã‚¡ã‚¤ãƒ«ãŒæƒã£ã¦ãŸã‚‰waveã¯èª­ã¾ãªãã¦è‰¯ã„ã€‚ï¼ˆä»Šã¯å¿…ãšèª­ã‚“ã§ã‚‹ï¼‰
+// å¦‚æœæ‚¨æ‹¥æœ‰æ‰€æœ‰åˆ†ææ–‡ä»¶ï¼Œåˆ™æ— éœ€é˜…è¯»waveã€‚ ï¼ˆæˆ‘ç°åœ¨è‚¯å®šé˜…è¯»è¿‡ï¼‰
 int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs, int *p_siglen)//return tLen
 {
 	char fname1[512];
@@ -215,7 +244,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 				t = 0;
 				f0 = 0;
 				tLen= 0;
-				fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n");
+				fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n");
 			}
 		}
 		fclose(fp);
@@ -242,7 +271,8 @@ int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p
 	}
 	else
 	{
-		fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n");
+		fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n");
+		// fprintf(stderr, "æ— æ³•ä¿æŠ¤å†…å­˜ã€‚ %d\n");
 		if (t) free(t);
 		if (f0) free(f0);
 		t = 0;
@@ -276,7 +306,7 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 		for (i=0; i <tLen; i++)
 		{
 			int un;
-			if ((un = _fpclass(f0[i]) & 0x0087) != 0)//NaN,+Inf,-Inf,denormal‚ğœŠO‚·‚é
+			if ((un = _fpclass(f0[i]) & 0x0087) != 0)//NaN,+Inf,-Inf,denormalã‚’é™¤å¤–ã™ã‚‹ // NaN,+Inf,-Inf,denormalæ’é™¤
 			{
 #ifdef _DEBUG
 				printf("un[%d]=%04x!\n", i, un);
@@ -357,12 +387,12 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 					}
 					free(specgram);
 					specgram = 0;
-					fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n", i);
+					fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n", i);
 				}
 			}
 			else
 			{
-				fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB\n");
+				fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚\n");
 			}
 		}
 		else
@@ -408,12 +438,12 @@ double **getSTARParam(double x[], int signalLen, int fs, double t[], double f0[]
 			}
 			free(specgram);
 			specgram = 0;
-			fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n", i);
+			fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n", i);
 		}
 	}
 	else
 	{
-		fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB\n");
+		fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚\n");
 	}
 	printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return specgram;
@@ -531,12 +561,12 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 					}
 					free(residualSpecgram);
 					residualSpecgram = 0;
-					fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n", i);
+					fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n", i);
 				}
 			}
 			else
 			{
-				fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB\n");
+				fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚\n");
 			}
 		}
 		fclose(fp);
@@ -578,12 +608,12 @@ double **getPlatinumParam(double x[], int signalLen, int fs, double t[], double 
 			}
 			free(residualSpecgram);
 			residualSpecgram = 0;
-			fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB%d\n", i);
+			fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚%d\n", i);
 		}
 	}
 	else
 	{
-		fprintf(stderr, " ƒƒ‚ƒŠ[‚ªŠm•Û‚Å‚«‚Ü‚¹‚ñB\n");
+		fprintf(stderr, " ãƒ¡ãƒ¢ãƒªãƒ¼ãŒç¢ºä¿ã§ãã¾ã›ã‚“ã€‚\n");
 	}
 	printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return residualSpecgram;
@@ -627,7 +657,7 @@ void writePlatinumParam(int signalLen, int fs, const char *filename, double *res
 				short v = (short)(residualSpecgram[i][j] * 256.0);
 				//v = log(v * (2048.0*2048.0*2048.0) + 1) * 1024.0;
 				if (v > 32767) v = 32767;
-				else if (v < -32768) v = -32768;//ˆê‰–O˜aŒvZ‚µ‚Ä‚¨‚­i‚µ‚½‚ç•s–¡‚¢‚¯‚Çj
+				else if (v < -32768) v = -32768;//ä¸€å¿œé£½å’Œè¨ˆç®—ã—ã¦ãŠãï¼ˆã—ãŸã‚‰ä¸å‘³ã„ã‘ã©ï¼‰ //æš‚æ—¶è®¡ç®—é¥±å’Œåº¦ï¼ˆä¸å¥½åƒï¼‰
 				fwrite(&v, sizeof(short), 1, f1);
 				if (max < v) max = v;
 				if (min > v) min = v;
@@ -651,7 +681,8 @@ double getFreqAvg(double f0[], int tLen)
 		if (value < 1000.0 && value > 55.0)
 		{
 			r = 1.0;
-			//˜A‘±‚µ‚Ä‹ß‚¢’l‚Ìê‡‚ÌƒEƒGƒCƒg‚ğd‚­‚·‚é
+			//é€£ç¶šã—ã¦è¿‘ã„å€¤ã®å ´åˆã®ã‚¦ã‚¨ã‚¤ãƒˆã‚’é‡ãã™ã‚‹
+			//å½“å€¼è¿ç»­å…³é—­æ—¶ç§°é‡
 			for (j = 0; j <= 5; j++)
 			{
 				if (i > j) {
@@ -681,7 +712,9 @@ void freeSpecgram(double **spec, int n)
 		free(spec);
 	}
 }
-// ƒXƒyƒNƒgƒ‹Lk
+
+//é¢‘è°±æ‹‰ä¼¸
+// ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¼¸ç¸®
 void stretchSpectrum(double **specgram, int oLen, double ratio, int fs, int fftl)
 {
 	int i, j;
@@ -696,7 +729,8 @@ void stretchSpectrum(double **specgram, int oLen, double ratio, int fs, int fftl
 		spec1 = (double *)malloc(sizeof(double)*fftl);
 		spec2 = (double *)malloc(sizeof(double)*fftl);
 
-		// ü”g”Lk‚Ì‘Oˆ—
+		// å‘¨æ³¢æ•°ä¼¸ç¸®ã®å‰å‡¦ç†
+		//é¢‘ç‡æ‰©å±•/æ”¶ç¼©çš„é¢„å¤„ç†
 		for(i = 0;i <= fftl/2;i++) 
 		{
 			freqAxis1[i] = (double)i/(double)fftl * (double)fs * ratio;
@@ -742,7 +776,8 @@ void makeHeader(char *header, int samples, int fs, int nbit)
 
 int main(int argc, char *argv[])
 {
-	// ƒƒ‚ƒŠƒŠ[ƒNŒŸo
+	// ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯æ¤œå‡º
+	//å†…å­˜æ³„æ¼æ£€æµ‹
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 	int i, j;
@@ -750,7 +785,7 @@ int main(int argc, char *argv[])
 	//*
 	if(argc <= 4) 
 	{
-		fprintf(stderr, "error: ˆø”‚Ì”‚ª•s³‚Å‚·D\n");
+		fprintf(stderr, "error: å¼•æ•°ã®æ•°ãŒä¸æ­£ã§ã™ï¼\n"); // å‚æ•°æ•°é‡æ— æ•ˆ
 		return 0;
 	}
 	//*/
@@ -797,7 +832,7 @@ int main(int argc, char *argv[])
 		x = wavread(argv[1], &fs, &nbit, &signalLen);
 		if(x == NULL)
 		{
-			fprintf(stderr, "error: w’è‚³‚ê‚½ƒtƒ@ƒCƒ‹‚Í‘¶İ‚µ‚Ü‚¹‚ñD\n");
+			fprintf(stderr, "error: æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã¯å­˜åœ¨ã—ã¾ã›ã‚“ï¼\n"); // æŒ‡å®šçš„æ–‡ä»¶ä¸å­˜åœ¨
 			return 0;
 		}
 		tLen = getDIOParam(x, signalLen, fs, FRAMEPERIOD, &t, &f0);
@@ -808,7 +843,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			free(x);
-			fprintf(stderr, "error: DIOƒpƒ‰ƒ[ƒ^ì¬¸”sD\n");
+			fprintf(stderr, "error: DIOãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä½œæˆå¤±æ•—ï¼\n"); // DIOå‚æ•°åˆ›å»ºå¤±è´¥
 			return 0;
 		}
 		fftl = getFFTLengthForStar(fs);
@@ -818,7 +853,7 @@ int main(int argc, char *argv[])
 			free(x);
 			free(t);
 			free(f0);
-			fprintf(stderr, "error: STARƒpƒ‰ƒ[ƒ^ì¬¸”sD\n");
+			fprintf(stderr, "error: STARãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä½œæˆå¤±æ•—ï¼\n"); // STARå‚æ•°åˆ›å»ºå¤±è´¥ã€‚
 			return 0;
 		}
 		else
@@ -832,7 +867,7 @@ int main(int argc, char *argv[])
 			free(t);
 			free(f0);
 			free(specgram);
-			fprintf(stderr, "error: STARƒpƒ‰ƒ[ƒ^ì¬¸”sD\n");
+			fprintf(stderr, "error: STARãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä½œæˆå¤±æ•—ï¼\n"); // STARå‚æ•°åˆ›å»ºå¤±è´¥
 			return 0;
 		}
 		else
@@ -841,13 +876,15 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	// ’ˆÓI
-	// ‘S‚Ä‚Ì•ªÍ‚ªŠ®—¹‚·‚é‚Ü‚ÅCF0‚Í‘€ì‚µ‚È‚¢‚±‚ÆD
+	// æ³¨æ„ï¼
+	// å…¨ã¦ã®åˆ†æãŒå®Œäº†ã™ã‚‹ã¾ã§ï¼ŒF0ã¯æ“ä½œã—ãªã„ã“ã¨ï¼
+	//åœ¨æ‰€æœ‰åˆ†æå®Œæˆä¹‹å‰ï¼Œè¯·å‹¿æ“ä½œF0ã€‚
 
-	//ˆø”‚ğæ‚è‚Ş
+	//å¼•æ•°ã‚’å–ã‚Šè¾¼ã‚€
+	//æ¥å—å‚æ•°
 	double offset = 0;
-	double wavelength = (double)signalLen/(double)fs * 1000;//‰¹Œ¹‚Ì’·‚³‚ğmsec‚É‚·‚é
-	double length_req = wavelength;//‰Šú’l‚¢‚ê‚Æ‚­
+	double wavelength = (double)signalLen/(double)fs * 1000;//éŸ³æºã®é•·ã•ã‚’msecã«ã™ã‚‹  å°†å£°æºé•¿åº¦è®¾ç½®ä¸ºæ¯«ç§’
+	double length_req = wavelength;//åˆæœŸå€¤ã„ã‚Œã¨ã  åˆå§‹å€¼
 	double fixed = 0;
 	double blank = 0;
 	double *target_freqs = NULL;
@@ -867,15 +904,15 @@ int main(int argc, char *argv[])
 	printf("fixed         :%lf\n", fixed);
 	printf("blank         :%lf\n", blank);
 #endif
-	//Lk‚ÌŠT”O}
+	//ä¼¸ç¸®ã®æ¦‚å¿µå›³
 	//  offset    fixed      m2      blank
-	//|--------|--------|---------|---------| Œ´‰¹
+	//|--------|--------|---------|---------| åŸéŸ³
 	//         |        |          |
 	//         |   l1   |    l2     |
-	//         |--------|------------|  o—Í
+	//         |--------|------------|  å‡ºåŠ›
 	// l1  = fixed / velocity
 	// l2  = m2    / stretch
-	// l1 + l2  = —v‹’·argv[7]
+	// l1 + l2  = è¦æ±‚é•·ï¼argv[7]
 	if (blank < 0)
 	{
 		blank = wavelength - offset + blank;
@@ -883,7 +920,7 @@ int main(int argc, char *argv[])
 	}
 	if (offset + blank >= wavelength)
 	{
-		fprintf(stderr, "error: ƒpƒ‰ƒ[ƒ^ˆÙíD\n");
+		fprintf(stderr, "error: ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç•°å¸¸ï¼\n"); // å‚æ•°é”™è¯¯
 		free(x);
 		return 0;
 	}
@@ -898,7 +935,7 @@ int main(int argc, char *argv[])
 	l2 = length_req - l1; 
 	if (m2 <= 0 && l2 > 0)
 	{
-		fprintf(stderr, "error: ƒpƒ‰ƒ[ƒ^ˆÙí2D\n");
+		fprintf(stderr, "error: ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç•°å¸¸2ï¼\n"); // å‚æ•°é”™è¯¯2
 		free(x);
 		return 0;
 	}
@@ -977,7 +1014,7 @@ int main(int argc, char *argv[])
 		residualSpecgram_out[i] = (double *)malloc(sizeof(double) * (fftl+1));
 		memset(residualSpecgram_out[i], 0, sizeof(double) * (fftl+1));
 	}
-	//o—Íf0”—ñ
+	//å‡ºåŠ›f0æ•°åˆ—
 	double tmo, tmi;
 	DWORD elapsedTime = timeGetTime();
 	printf("\nTransform\n");
@@ -1094,7 +1131,8 @@ fclose(fp1);
 fclose(fp2);
 fclose(fp3);
 #endif
-	// ƒXƒyƒNƒgƒ‹Lk
+	// ã‚¹ãƒšã‚¯ãƒˆãƒ«ä¼¸ç¸®
+	// å…‰è°±æ‹‰ä¼¸
 	//stretchSpectrum(double **specgram, double ratio)
 	if(argc > 5 && (cp = strchr(argv[5],'g')) != 0)
 	{
@@ -1108,7 +1146,7 @@ fclose(fp3);
 	}
 	printf("TRANSFORM: %d [msec]\n", timeGetTime() - elapsedTime);
 
-	// ‡¬
+	// åˆæˆ
 	y  = (double *)malloc(sizeof(double)*outSamples);
 	memset(y, 0, sizeof(double) * outSamples);
 
@@ -1118,13 +1156,14 @@ fclose(fp3);
 	synthesis(f0out, oLen, specgram_out, residualSpecgram_out, fftl, FRAMEPERIOD, fs, y, outSamples);
 	printf("WORLD: %d [msec]\n", timeGetTime() - elapsedTime);
 
-	// ƒtƒ@ƒCƒ‹‚Ì‘‚«o‚µ (“à—e‚É‚ÍŠÖŒW‚È‚¢‚æ)
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›¸ãå‡ºã— (å†…å®¹ã«ã¯é–¢ä¿‚ãªã„ã‚ˆ)
+	// æ–‡ä»¶å¯¼å‡ºï¼ˆä¸å†…å®¹æ— å…³ï¼‰
 	char header[44];
 	short *output;
 	double maxAmp;
 
 	output = (short *)malloc(sizeof(short) * outSamples);
-	// U•‚Ì³‹K‰»
+	// æŒ¯å¹…ã®æ­£è¦åŒ–
 	maxAmp = 0.0;
 #ifdef _DEBUG
 {
@@ -1159,7 +1198,8 @@ fclose(fp3);
 	//double peekcomp = pow( 16384.0 / maxAmp, value);
 	for(i = 0;i < outSamples;i++)
 	{
-		//****** ‹ó”’•”•ª‚Åsynthesis()‚ªnan‚ğ“f‚­‚Ì‚Å‘Îô‚µ‚½*********
+		//****** ç©ºç™½éƒ¨åˆ†ã§synthesis()ãŒnanã‚’åãã®ã§å¯¾ç­–ã—ãŸ*********
+		// ç”±äºSynthesis()åœ¨ç©ºç™½éƒ¨åˆ†åå‡ºäº†nanï¼Œå› æ­¤æˆ‘é‡‡å–äº†æªæ–½ã€‚
 		value = _isnan(y[i]) ? 0 : y[i] * peekcomp * volume;
 		if (value > 32767.0) value = 32767.0;
 		else if (value < -32767.0) value = -32767.0;
@@ -1176,7 +1216,7 @@ fclose(fp3);
 
 	printf("complete.\n");
 
-	// ƒƒ‚ƒŠ‚Ì‰ğ•ú
+	// ãƒ¡ãƒ¢ãƒªã®è§£æ”¾
 	free(output);
 	free(x); free(t); free(f0); free(y);
 	for(i = 0;i < tLen;i++)

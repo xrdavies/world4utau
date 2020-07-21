@@ -1,1 +1,1 @@
-double * wavread(char* filename, int *fs, int *Nbit, int *waveLength);
+﻿double * wavread(char* filename, int *fs, int *Nbit, int *waveLength);

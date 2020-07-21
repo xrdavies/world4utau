@@ -1,4 +1,4 @@
-#include <windows.h>
+ï»¿#include <windows.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,89 +6,89 @@
 
 #pragma warning(disable:4996)
 
-/* wavreadŠÖ”‚ÌˆÚA */
+/* wavreadé–¢æ•°ã®ç§»æ¤ */
 double * wavread(char* filename, int *fs, int *Nbit, int *waveLength)
 {
 	FILE *fp;
-	char dataCheck[5]; // ­‚µ‘½‚ß‚É
+	char dataCheck[5]; // å°‘ã—å¤šã‚ã«
 	unsigned char forIntNumber[4];
 	double tmp, signBias, zeroLine;
 	int quantizationByte;
 	double *waveForm;
 	int i;
-	dataCheck[4] = '\0'; // •¶š—ñÆ‡‚Ì‚½‚ßCÅŒã‚ÉI—¹•¶š‚ğ“ü‚ê‚éD
+	dataCheck[4] = '\0'; // æ–‡å­—åˆ—ç…§åˆã®ãŸã‚ï¼Œæœ€å¾Œã«çµ‚äº†æ–‡å­—ã‚’å…¥ã‚Œã‚‹ï¼
 //	fp = fopen(filename, "rb");
 	fp = fopen(filename, "rb");
 	if(NULL == fp) 
 	{
-		printf("ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh‚É¸”s\n");
+		printf("ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰ã«å¤±æ•—\n");
 		return NULL;
 	}
-	//ƒwƒbƒ_‚Ìƒ`ƒFƒbƒN
+	//ãƒ˜ãƒƒãƒ€ã®ãƒã‚§ãƒƒã‚¯
 	fread(dataCheck, sizeof(char), 4, fp); // "RIFF"
 	if(0 != strcmp(dataCheck,"RIFF"))
 	{
 		fclose(fp);
-		printf("ƒwƒbƒ_RIFF‚ª•s³\n");
+		printf("ãƒ˜ãƒƒãƒ€RIFFãŒä¸æ­£\n");
 		return NULL;
 	}
-	fseek(fp, 4, SEEK_CUR); // 4ƒoƒCƒg”ò‚Î‚·
+	fseek(fp, 4, SEEK_CUR); // 4ãƒã‚¤ãƒˆé£›ã°ã™
 	fread(dataCheck, sizeof(char), 4, fp); // "WAVE"
 	if(0 != strcmp(dataCheck,"WAVE"))
 	{
 		fclose(fp);
-		printf("ƒwƒbƒ_WAVE‚ª•s³\n");
+		printf("ãƒ˜ãƒƒãƒ€WAVEãŒä¸æ­£\n");
 		return NULL;
 	}
 	fread(dataCheck, sizeof(char), 4, fp); // "fmt "
 	if(0 != strcmp(dataCheck,"fmt "))
 	{
 		fclose(fp);
-		printf("ƒwƒbƒ_fmt ‚ª•s³\n");
+		printf("ãƒ˜ãƒƒãƒ€fmt ãŒä¸æ­£\n");
 		return NULL;
 	}
 	fread(dataCheck, sizeof(char), 4, fp); //1 0 0 0
 	if(!(16 == dataCheck[0] && 0 == dataCheck[1] && 0 == dataCheck[2] && 0 == dataCheck[3]))
 	{
 		fclose(fp);
-		printf("ƒwƒbƒ_fmt (2)‚ª•s³\n");
+		printf("ãƒ˜ãƒƒãƒ€fmt (2)ãŒä¸æ­£\n");
 		return NULL;
 	}
 	fread(dataCheck, sizeof(char), 2, fp); //1 0
 	if(!(1 == dataCheck[0] && 0 == dataCheck[1]))
 	{
 		fclose(fp);
-		printf("ƒtƒH[ƒ}ƒbƒgID‚ª•s³\n");
+		printf("ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆIDãŒä¸æ­£\n");
 		return NULL;
 	}
 	fread(dataCheck, sizeof(char), 2, fp); //1 0
 	if(!(1 == dataCheck[0] && 0 == dataCheck[1]))
 	{
 		fclose(fp);
-		printf("ƒXƒeƒŒƒI‚É‚Í‘Î‰‚µ‚Ä‚¢‚Ü‚¹‚ñ\n");
+		printf("ã‚¹ãƒ†ãƒ¬ã‚ªã«ã¯å¯¾å¿œã—ã¦ã„ã¾ã›ã‚“\n");
 		return NULL;
 	}
 
-	// ƒTƒ“ƒvƒŠƒ“ƒOü”g”
+	// ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°å‘¨æ³¢æ•°
 	fread(forIntNumber, sizeof(char), 4, fp);
 	*fs = 0;
 	for(i = 3;i >= 0;i--)
 	{
 		*fs = *fs*256 + forIntNumber[i];
 	}
-	// —Êq‰»ƒrƒbƒg”
-	fseek(fp, 6, SEEK_CUR); // 6ƒoƒCƒg”ò‚Î‚·
+	// é‡å­åŒ–ãƒ“ãƒƒãƒˆæ•°
+	fseek(fp, 6, SEEK_CUR); // 6ãƒã‚¤ãƒˆé£›ã°ã™
 	fread(forIntNumber, sizeof(char), 2, fp);
 	*Nbit = forIntNumber[0];
-	// ƒwƒbƒ_
+	// ãƒ˜ãƒƒãƒ€
 	fread(dataCheck, sizeof(char), 4, fp); // "data"
 	if(0 != strcmp(dataCheck,"data"))
 	{
 		fclose(fp);
-		printf("ƒwƒbƒ_data‚ª•s³\n");
+		printf("ãƒ˜ãƒƒãƒ€dataãŒä¸æ­£\n");
 		return NULL;
 	}
-	// ƒTƒ“ƒvƒ‹“_‚Ì”
+	// ã‚µãƒ³ãƒ—ãƒ«ç‚¹ã®æ•°
 	fread(forIntNumber, sizeof(char), 4, fp); // "data"
 	*waveLength = 0;
 	for(i = 3;i >= 0;i--)
@@ -97,7 +97,7 @@ double * wavread(char* filename, int *fs, int *Nbit, int *waveLength)
 	}
 	*waveLength /= (*Nbit/8);
 
-	// ”gŒ`‚ğæ‚èo‚·
+	// æ³¢å½¢ã‚’å–ã‚Šå‡ºã™
 	waveForm = (double *)malloc(sizeof(double) * *waveLength);
 	if(waveForm == NULL) return NULL;
 
@@ -108,20 +108,20 @@ double * wavread(char* filename, int *fs, int *Nbit, int *waveLength)
 		signBias = 0.0;
 		tmp = 0.0;
 		fread(forIntNumber, sizeof(char), quantizationByte, fp); // "data"
-		// •„†‚ÌŠm”F
+		// ç¬¦å·ã®ç¢ºèª
 		if(forIntNumber[quantizationByte-1] >= 128)
 		{
 			signBias = pow(2.0,*Nbit-1);
 			forIntNumber[quantizationByte-1] = forIntNumber[quantizationByte-1] & 0x7F;
 		}
-		// ƒf[ƒ^‚Ì“Ç‚İ‚İ
+		// ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿
 		for(int j = quantizationByte-1;j >= 0;j--)
 		{
 			tmp = tmp*256.0 + (double)(forIntNumber[j]);
 		}
 		waveForm[i] = (double)((tmp - signBias) / zeroLine);
 	}
-	// ¬Œ÷
+	// æˆåŠŸ
 	fclose(fp);
 	return waveForm;
 }
