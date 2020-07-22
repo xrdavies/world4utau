@@ -4,7 +4,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #include "wavread.h"
+#include "common.h"
 
 #pragma warning(disable : 4996)
 

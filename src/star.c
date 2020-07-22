@@ -3,6 +3,7 @@
 #include <stdio.h> // for debug
 #include <stdlib.h>
 #include "matlab.h"
+#include "common.h"
 
 void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 					double * sliceSTAR);

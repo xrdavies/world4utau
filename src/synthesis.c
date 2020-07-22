@@ -6,6 +6,8 @@
 #include <float.h>
 #include <math.h>
 #include "matlab.h"
+#include "constant.h"
+#include "common.h"
 
 // spectrum, cepstrumは毎回malloc, freeするのが面倒だから．
 /*

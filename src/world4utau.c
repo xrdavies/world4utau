@@ -253,7 +253,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 				t = 0;
 				f0 = 0;
 				tLen = 0;
-				fprintf(stderr, " メモリーが確保できません。%d\n");
+				fprintf(stderr, " メモリーが確保できません。\n");
 			}
 		}
 		fclose(fp);
@@ -280,7 +280,7 @@ int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p
 	}
 	else
 	{
-		fprintf(stderr, " メモリーが確保できません。%d\n");
+		fprintf(stderr, " メモリーが確保できません。\n");
 		// fprintf(stderr, "无法保护内存。 %d\n");
 		if (t)
 			free(t);
@@ -774,7 +774,7 @@ void stretchSpectrum(double **specgram, int oLen, double ratio, int fs, int fftl
 				specgram[i][j] = exp(spec2[j]);
 			if (ratio < 1.0)
 			{
-				for (j = int((double)fftl / 2 * ratio); j <= fftl / 2; j++)
+				for (j = (int)((double)fftl / 2 * ratio); j <= fftl / 2; j++)
 				{
 					specgram[i][j] = specgram[i][(int)((double)fftl / 2 * ratio) - 1];
 				}
@@ -992,6 +992,7 @@ int main(int argc, char *argv[])
 	printf("Length %d [sample]\n", outSamples);
 	printf("Length %f [sec]\n", (double)outSamples / (double)fs);
 
+	// FIXME: what does this mean?? [ruix]
 	int flag_t = 0;
 	char *cp;
 	if (argc > 5 && (cp = strchr(argv[5], 't')) != 0)

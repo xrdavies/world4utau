@@ -1,6 +1,7 @@
 ﻿#include "world.h"
 #include "constant.h"
 #include "matlab.h"
+#include "common.h"
 
 // 内部関数(ユーザは触らないほうが良い)
 void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen,
