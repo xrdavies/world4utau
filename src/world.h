@@ -46,5 +46,6 @@
 #include "star.h"
 #include "synthesis.h"
 #include "wavread.h"
+#include "common.h"
 
 #endif

@@ -246,10 +246,8 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 			}
 			else
 			{
-				if (t)
-					free(t);
-				if (f0)
-					free(f0);
+				SAFE_FREE(t);
+				SAFE_FREE(f0);
 				t = 0;
 				f0 = 0;
 				tLen = 0;
@@ -282,10 +280,8 @@ int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p
 	{
 		fprintf(stderr, " メモリーが確保できません。\n");
 		// fprintf(stderr, "无法保护内存。 %d\n");
-		if (t)
-			free(t);
-		if (f0)
-			free(f0);
+		SAFE_FREE(t);
+		SAFE_FREE(f0);
 		t = 0;
 		f0 = 0;
 		tLen = 0;
@@ -505,9 +501,13 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 				fwrite(&v, sizeof(unsigned short), 1, f1);
 				//fprintf(ft, "%0.9lf\t", specgram[i][j]*1000000.0);
 				if (max < v)
+				{
 					max = v;
+				}
 				if (min > v)
+				{
 					min = v;
+				}
 			}
 			//fprintf(ft, "\n");
 		}
@@ -678,14 +678,22 @@ void writePlatinumParam(int signalLen, int fs, const char *filename, double *res
 				short v = (short)(residualSpecgram[i][j] * 256.0);
 				//v = log(v * (2048.0*2048.0*2048.0) + 1) * 1024.0;
 				if (v > 32767)
+				{
 					v = 32767;
+				}
 				else if (v < -32768)
+				{
 					v = -32768; //一応飽和計算しておく（したら不味いけど） //暂时计算饱和度（不好吃）
+				}
 				fwrite(&v, sizeof(short), 1, f1);
 				if (max < v)
+				{
 					max = v;
+				}
 				if (min > v)
+				{
 					min = v;
+				}
 			}
 		}
 		fclose(f1);
@@ -726,7 +734,9 @@ double getFreqAvg(double f0[], int tLen)
 		}
 	}
 	if (base_value > 0)
+	{
 		freq_avg /= base_value;
+	}
 	return freq_avg;
 }
 void freeSpecgram(double **spec, int n)
@@ -873,7 +883,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			free(x);
+			SAFE_FREE(x);
 			fprintf(stderr, "error: DIOパラメータ作成失敗．\n"); // DIO参数创建失败
 			return 0;
 		}
@@ -881,9 +891,9 @@ int main(int argc, char *argv[])
 		specgram = getSTARParam(x, signalLen, fs, t, f0, tLen, fftl);
 		if (!specgram)
 		{
-			free(x);
-			free(t);
-			free(f0);
+			SAFE_FREE(x);
+			SAFE_FREE(t);
+			SAFE_FREE(f0);
 			fprintf(stderr, "error: STARパラメータ作成失敗．\n"); // STAR参数创建失败。
 			return 0;
 		}
@@ -997,7 +1007,7 @@ int main(int argc, char *argv[])
 	char *cp;
 	if (argc > 5 && (cp = strchr(argv[5], 't')) != 0)
 	{
-		sscanf(cp + 1, "%lf", &flag_t);
+		sscanf(cp + 1, "%d", &flag_t);
 	}
 	double modulation = 100;
 	if (argc > 11)
