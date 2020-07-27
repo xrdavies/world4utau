@@ -198,7 +198,10 @@ void makeFilename(const char *filename, const char *ext, char *output)
 	if (cp)
 		*cp = 0;
 	strcat(output, ext);
+
+	printf("%s\n", output);
 }
+
 //TODO 分析ファイルが揃ってたらwaveは読まなくて良い。（今は必ず読んでる）
 // 如果您拥有所有分析文件，则无需阅读wave。 （我现在肯定阅读过）
 int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs, int *p_siglen) //return tLen
@@ -215,7 +218,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 
 	// DWORD elapsedTime;
 
-	printf("read .dio:");
+	printf("read .dio:\n");
 	// elapsedTime = timeGetTime();
 
 	FILE *fp = fopen(fname1, "rb");
@@ -298,7 +301,7 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 
 	// DWORD elapsedTime;
 
-	printf("write .dio");
+	printf("write .dio\n");
 	// elapsedTime = timeGetTime();
 
 	//FILE *ft = fopen("dio0.txt", "wt");
@@ -349,7 +352,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 
 	makeFilename(filename, ".star", fname2);
 
-	printf("read .star:");
+	printf("read .star:\n");
 	// elapsedTime = timeGetTime();
 
 	FILE *fp = fopen(fname2, "rb");
@@ -531,7 +534,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 	char fname3[512];
 	makeFilename(filename, ".platinum", fname3);
 
-	printf("read .platinum:");
+	printf("read .platinum:\n");
 	// elapsedTime = timeGetTime();
 
 	FILE *fp = fopen(fname3, "rb");
@@ -821,15 +824,22 @@ int main(int argc, char *argv[])
 	//内存泄漏检测
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	printf("./world4utau");
+	int ii = 1;
+	while (ii < argc)
+	{
+		printf(" '%s'", argv[ii]);
+		ii++;
+	}
+	printf("\n");
+
 	int i, j;
 
-	//*
 	if (argc <= 4)
 	{
-		fprintf(stderr, "error: 引数の数が不正です．\n"); // 参数数量无效
+		fprintf(stderr, "error: missing params．\n");
 		return 0;
 	}
-	//*/
 
 	FILE *fp;
 	int fs, nbit = 16;
@@ -839,13 +849,13 @@ int main(int argc, char *argv[])
 		flag_G = strchr(argv[5], 'G') != 0;
 	}
 
-	double *x = 0, *f0, *t, *y;
-	double **specgram;
-	double **residualSpecgram;
-	int fftl;
+	double *x = 0, *f0 = NULL, *t = NULL, *y = NULL;
+	double **specgram = NULL;
+	double **residualSpecgram = NULL;
+	int fftl = 0;
 
-	int signalLen;
-	int tLen;
+	int signalLen = 0;
+	int tLen = 0;
 
 	tLen = readDIOParam(argv[1], &t, &f0, &fs, &signalLen);
 	if (tLen != 0)
@@ -884,7 +894,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			SAFE_FREE(x);
-			fprintf(stderr, "error: DIOパラメータ作成失敗．\n"); // DIO参数创建失败
+			fprintf(stderr, "error: DIO initialization failed．\n"); // DIO参数创建失败
 			return 0;
 		}
 		fftl = getFFTLengthForStar(fs);
@@ -894,7 +904,7 @@ int main(int argc, char *argv[])
 			SAFE_FREE(x);
 			SAFE_FREE(t);
 			SAFE_FREE(f0);
-			fprintf(stderr, "error: STARパラメータ作成失敗．\n"); // STAR参数创建失败。
+			fprintf(stderr, "error: STAR initialization failed．\n"); // STAR参数创建失败。
 			return 0;
 		}
 		else
@@ -904,11 +914,11 @@ int main(int argc, char *argv[])
 		residualSpecgram = getPlatinumParam(x, signalLen, fs, t, f0, specgram, tLen, fftl);
 		if (!residualSpecgram)
 		{
-			free(x);
-			free(t);
-			free(f0);
-			free(specgram);
-			fprintf(stderr, "error: STARパラメータ作成失敗．\n"); // STAR参数创建失败
+			SAFE_FREE(x);
+			SAFE_FREE(t);
+			SAFE_FREE(f0);
+			SAFE_FREE(specgram);
+			fprintf(stderr, "error: Platinum initialization failed．\n"); // STAR参数创建失败
 			return 0;
 		}
 		else
@@ -932,16 +942,31 @@ int main(int argc, char *argv[])
 	double velocity = 1.0;
 	double value = 100;
 	if (argc > 4)
+	{
 		sscanf(argv[4], "%lf", &value);
+	}
 	velocity = pow(2, value / 100 - 1.0);
+
 	if (argc > 6)
+	{
 		sscanf(argv[6], "%lf", &offset);
+	}
+
 	if (argc > 7)
+	{
 		sscanf(argv[7], "%lf", &length_req);
+	}
+
 	if (argc > 8)
+	{
 		sscanf(argv[8], "%lf", &fixed);
+	}
+
 	if (argc > 9)
+	{
 		sscanf(argv[9], "%lf", &blank);
+	}
+
 #ifdef _DEBBUG
 	printf("Parameters\n");
 	printf("velocity      :%lf\n", velocity);
@@ -986,9 +1011,12 @@ int main(int argc, char *argv[])
 		free(x);
 		return 0;
 	}
+
 	double stretch = m2 / l2;
 	if (stretch > 1.0)
+	{
 		stretch = 1.0;
+	}
 
 	int outSamples = (int)(length_req * 0.001 * fs + 1);
 	int oLen = getSamplesForDIO(fs, outSamples, FRAMEPERIOD);
@@ -1009,9 +1037,12 @@ int main(int argc, char *argv[])
 	{
 		sscanf(cp + 1, "%d", &flag_t);
 	}
+
 	double modulation = 100;
 	if (argc > 11)
+	{
 		sscanf(argv[11], "%lf", &modulation);
+	}
 
 	double volume = 1.0;
 	if (argc > 10)

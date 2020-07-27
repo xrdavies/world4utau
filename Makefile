@@ -3,8 +3,8 @@
 BIN=world4utau
 EXE=resampler.exe # 临时用来兼容OpenUtau
 
-build: 
-	gcc -c ./src/*.c
+build:
+	gcc -c ./src/*.c -D_DEBBUG
 	gcc -o ${BIN} *.o -lfftw3
 	cp ${BIN} ${EXE}
 
