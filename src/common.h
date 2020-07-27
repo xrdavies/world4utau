@@ -1,4 +1,4 @@
-#ifndef _H_COMMON_
+﻿#ifndef _H_COMMON_
 #define _H_COMMON_
 
 #define max(a, b)               \

@@ -4,17 +4,10 @@
 #include "common.h"
 
 // 内部関数(ユーザは触らないほうが良い)
-void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen,
-				   double *f0Deviations, double *interpolatedF0);
-void zeroCrossingEngine(double *x, int xLen, double fs,
-						double *eLocations, double *iLocations, double *intervals, int *iLen);
-long decimateForF0(double *x, int xLen, double *y, int r);
-void filterForDecimate(double *x, int xLen, double *y, int r);
+void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen, double *f0Deviations, double *interpolatedF0);
+void zeroCrossingEngine(double *x, int xLen, double fs, double *eLocations, double *iLocations, double *intervals, int *iLen);
 void nuttallWindow(int yLen, double *y);
-void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen, int fs,
-					double **f0Map, double *bestF0, double *f0);
-void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1);
-void histc(double *x, int xLen, double *y, int yLen, int *index);
+void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen, int fs, double **f0Map, double *bestF0, double *f0);
 
 // F0軌跡の要素数を得る（事前にユーザがメモリ確保できるように）
 // framePeriod の単位はmsec
