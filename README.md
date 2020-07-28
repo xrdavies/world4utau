@@ -35,7 +35,7 @@ make build
 Suppose you already have XCode tools installed for C program.
 
 Build `fftw`. 
-*fftw* is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST). (http://www.fftw.org)[http://www.fftw.org] 
+*fftw* is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST). [http://www.fftw.org](http://www.fftw.org)
 
 In this repo, we include fftw-3.3.8 source code for convienent. You can download it from official site by yourself.
 ```
