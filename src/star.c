@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "matlab.h"
 #include "common.h"
+#include <math.h>
 
 void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 					double * sliceSTAR);
