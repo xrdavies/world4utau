@@ -17,7 +17,7 @@ OBJS_WITH_DIR = $(addprefix $(OBJ_DIR)/,$(OBJS))
 TARGET = $(OUT_DIR)/$(TARGET_NAME)
 INCLUDES = -I$(SRC_DIR)
 CFLAGS =  -D_DEBBUG #-g -Wall -O0
-LIBS = -lfftw3
+LIBS = -lfftw3 -lm
 
 CC = gcc
 
@@ -29,7 +29,7 @@ setup:
 	mkdir -p ${OUT_DIR}
 
 $(TARGET):$(OBJS)
-	$(CC) $(OBJS_WITH_DIR) -o $(TARGET) $(CFLAGS) -lfftw3
+	$(CC) $(OBJS_WITH_DIR) -o $(TARGET) $(CFLAGS) $(LIBS)
 
 $(OBJS): %.o : $(SRC_DIR)/%.c
 	$(info $@ $<)
