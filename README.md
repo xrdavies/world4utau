@@ -78,8 +78,8 @@ http://www.fftw.org/install/windows.html
 
 --------
 历史：
-2011.1.17 Ver.0.0.1组织了自制零件的代码。分析文件格式略有变化（自动更新）
-2011.1.16 Ver。无临时发布
+2011.1.17 Ver.0.0.1组织了自制零件的代码。分析文件格式略有变化（自动更新）  
+2011.1.16 Ver。无临时发布  
 
 
 world4utauエンジン
@@ -107,9 +107,9 @@ WORLDの仕組みをよく理解しないで作ってますので、WORLD本来�
 > 以上を守れば，修正したものを配布するのも販売するのも自由です．
 
 --------
-履歴：
-2011.1.17 Ver.0.0.1  自作部分のコードを整理。分析ファイルの形式が若干変わる（自動で更新）
-2011.1.16 Ver.なし   暫定公開
+履歴：  
+2011.1.17 Ver.0.0.1  自作部分のコードを整理。分析ファイルの形式が若干変わる（自動で更新）  
+2011.1.16 Ver.なし   暫定公開  
 
 
 world4utau engine
@@ -137,6 +137,6 @@ Below, quoted from readme.txt of WORLD (0.0.4).
 > If you keep the above, you are free to distribute the modified version or sell it.
 
 --------
-History:
-2011.1.17 Ver.0.0.1 Organized the code of the self-made part. Analysis file format changes slightly (automatically updated)
-2011.1.16 Ver. None Provisional release
+History:  
+2011.1.17 Ver.0.0.1 Organized the code of the self-made part. Analysis file format changes slightly (automatically updated)  
+2011.1.16 Ver. None Provisional release  
