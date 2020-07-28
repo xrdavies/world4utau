@@ -14,7 +14,7 @@ Install dependence.
 `sudo apt install git gcc texinfo`
 
 Build `fftw`. 
-*fftw* is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST). (http://www.fftw.org)[http://www.fftw.org] 
+*fftw* is a C subroutine library for computing the discrete Fourier transform (DFT) in one or more dimensions, of arbitrary input size, and of both real and complex data (as well as of even/odd data, i.e. the discrete cosine/sine transforms or DCT/DST). [http://www.fftw.org](http://www.fftw.org)
 
 In this repo, we include fftw-3.3.8 source code for convienent. You can download it from official site by yourself.
 ```
@@ -77,7 +77,7 @@ http://www.fftw.org/install/windows.html
 >如果保留上述内容，则可以自由分发或出售修改后的版本。
 
 --------
-历史：
+历史：  
 2011.1.17 Ver.0.0.1组织了自制零件的代码。分析文件格式略有变化（自动更新）  
 2011.1.16 Ver。无临时发布  
 
