@@ -59,7 +59,7 @@
 #include <windows.h>
 #endif
 
-#include "world.h"
+#include "world4utau.h"
 #include "wavread.h"
 
 #include <math.h>
