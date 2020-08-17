@@ -51,6 +51,9 @@ cd world4utau
 make build
 ```
 
+# Performance
+![](https://github.com/xrdavies/world4utau/blob/master/docs/valgrind.png?raw=true)
+
 # History Information
 world4utau引擎
 
