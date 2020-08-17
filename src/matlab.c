@@ -1,6 +1,6 @@
 // Matlabから移植した関数の寄せ集め
 #include <math.h>
-#include "world.h"
+#include "world4utau.h"
 
 // histc based on Matlab
 // This function is hidden.

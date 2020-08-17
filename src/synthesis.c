@@ -1,10 +1,8 @@
-﻿#include "synthesis.h"
-// #include "world.h"
-
-#include <stdio.h> // for debug
+﻿#include <stdio.h> // for debug
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
+#include "synthesis.h"
 #include "matlab.h"
 #include "constant.h"
 #include "common.h"
