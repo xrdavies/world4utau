@@ -47,5 +47,6 @@
 #include "synthesis.h"
 #include "wavread.h"
 #include "common.h"
+#include "timer.h"
 
 #endif

@@ -824,6 +824,8 @@ int main(int argc, char *argv[])
 	//内存泄漏检测
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
+	uint64 timer_start = GetTimeMs64();
+
 	printf("./world4utau");
 	int ii = 1;
 	while (ii < argc)
@@ -1335,6 +1337,10 @@ int main(int argc, char *argv[])
 	free(specgram_out);
 	free(residualSpecgram_out);
 	free(pit);
+
+	uint64 timer_end = GetTimeMs64();
+
+	printf("Elapse time in ms: %lld\n", timer_end - timer_start);
 
 	return 0;
 }
