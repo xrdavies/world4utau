@@ -28,6 +28,9 @@
         "functional": "c",
         "memory_resource": "c",
         "mutex": "c",
-        "sstream": "c"
+        "sstream": "c",
+        "cstring": "c",
+        "utility": "c",
+        "cstdio": "c"
     }
 }
