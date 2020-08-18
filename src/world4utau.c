@@ -54,6 +54,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <float.h>
+#include <memory.h>
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(_WINDOWS)
 #include <windows.h>
@@ -61,10 +64,7 @@
 
 #include "world4utau.h"
 #include "wavread.h"
-
-#include <math.h>
-#include <float.h>
-#include <memory.h>
+#include "MemFile.h"
 
 //分析移位量[毫秒]
 // 分析シフト量 [msec]
@@ -537,21 +537,22 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 	printf("read .platinum:\n");
 	// elapsedTime = timeGetTime();
 
-	FILE *fp = fopen(fname3, "rb");
+	// FILE *fp = fopen(fname3, "rb");
+	F_FILE *fp = F_OPEN(fname3, "rb");
 	if (fp)
 	{
 		char b[9];
-		fread(b, 1, 8, fp);
+		F_READ(b, 1, 8, fp);
 		if (strncmp(b, "platinum", 8) != 0)
 		{
-			fclose(fp);
+			F_CLOSE(fp);
 			printf(" bad file.\n");
 			return 0;
 		}
-		fread(&siglen, sizeof(int), 1, fp);
-		fread(&rate, sizeof(int), 1, fp);
-		fread(&tn, sizeof(unsigned short), 1, fp);
-		fread(&us, sizeof(unsigned short), 1, fp);
+		F_READ(&siglen, sizeof(int), 1, fp);
+		F_READ(&rate, sizeof(int), 1, fp);
+		F_READ(&tn, sizeof(unsigned short), 1, fp);
+		F_READ(&us, sizeof(unsigned short), 1, fp);
 		if (tn == tLen && (fftl + 1) == us && signalLen == siglen && fs == rate)
 		{
 			residualSpecgram = (double **)malloc(tLen * sizeof(double *));
@@ -566,7 +567,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 						for (j = 0; j <= fftl; j++)
 						{
 							short v;
-							fread(&v, sizeof(short), 1, fp);
+							F_READ(&v, sizeof(short), 1, fp);
 							residualSpecgram[i][j] = v * 3.90625E-03; // /256.0;
 						}
 					}
@@ -591,7 +592,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 				fprintf(stderr, " メモリーが確保できません。\n");
 			}
 		}
-		fclose(fp);
+		F_CLOSE(fp);
 	}
 	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return residualSpecgram;
@@ -817,6 +818,20 @@ void makeHeader(char *header, int samples, int fs, int nbit)
 	memcpy(header + 36, "data", 4);
 	*(long *)(header + 40) = samples * 2;
 }
+
+// argv[1] input wav
+// argv[2] output file
+// argv[3]
+// argv[4]
+// argv[5]
+// argv[6]
+// argv[7]
+// argv[8]
+// argv[9]
+// argv[10]
+// argv[11]
+// argv[12]
+// argv[13]
 
 int main(int argc, char *argv[])
 {
