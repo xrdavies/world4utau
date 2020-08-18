@@ -1,6 +1,7 @@
 #include "MemFile.h"
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 MemFile *OpenMemFile(const char *filename, const char *mode)
 {
@@ -71,6 +72,37 @@ size_t ReadMemFile(void *pbuf, size_t size, size_t nitem, MemFile *fp)
     fp->cur += nread;
 
     return nread;
+}
+
+int SeekMemFile(MemFile *fp, size_t size, int mode)
+{
+    if (mode == SEEK_CUR)
+    {
+        if (fp->cur + size <= fp->data + fp->size)
+        {
+            fp->cur += size;
+            return 0;
+        }
+        return -1;
+    }
+    else if (mode == SEEK_END)
+    {
+        if (size <= fp->size) {
+            fp->cur = fp->data + fp->size - size;
+            return 0;
+        }
+        return -1;
+    }
+    else if (mode == SEEK_SET)
+    {
+        if (size <= fp->size) {
+            fp->cur = fp->data + size;
+            return 0;
+        }
+        return -1;
+    }
+
+    return -1;
 }
 
 int CloseMemFile(MemFile *fp)
