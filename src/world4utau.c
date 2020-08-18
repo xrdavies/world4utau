@@ -221,20 +221,20 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 	printf("read .dio:\n");
 	// elapsedTime = timeGetTime();
 
-	FILE *fp = fopen(fname1, "rb");
+	F_FILE *fp = F_OPEN(fname1, "rb");
 	if (fp)
 	{
 		char d[9];
-		fread(d, 8, 1, fp);
+		F_READ(d, 8, 1, fp);
 		if (strncmp(d, "wrld-dio", 8) != 0)
 		{
-			fclose(fp);
+			F_CLOSE(fp);
 			printf(" bad file.\n");
 			return 0;
 		}
-		fread(&siglen, sizeof(int), 1, fp);
-		fread(&fs, sizeof(int), 1, fp);
-		fread(&tLen, sizeof(int), 1, fp);
+		F_READ(&siglen, sizeof(int), 1, fp);
+		F_READ(&fs, sizeof(int), 1, fp);
+		F_READ(&tLen, sizeof(int), 1, fp);
 		if (tLen > 0)
 		{
 			t = (double *)malloc(tLen * sizeof(double));
@@ -243,8 +243,8 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 			{
 				for (i = 0; i < tLen; i++)
 				{
-					fread(&(t[i]), sizeof(double), 1, fp);
-					fread(&(f0[i]), sizeof(double), 1, fp);
+					F_READ(&(t[i]), sizeof(double), 1, fp);
+					F_READ(&(f0[i]), sizeof(double), 1, fp);
 				}
 			}
 			else
@@ -257,7 +257,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 				fprintf(stderr, " メモリーが確保できません。\n");
 			}
 		}
-		fclose(fp);
+		F_CLOSE(fp);
 	}
 	*p_t = t;
 	*p_f0 = f0;
@@ -355,21 +355,21 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 	printf("read .star:\n");
 	// elapsedTime = timeGetTime();
 
-	FILE *fp = fopen(fname2, "rb");
+	F_FILE *fp = F_OPEN(fname2, "rb");
 	if (fp)
 	{
 		char st[9];
-		fread(st, 1, 8, fp);
+		F_READ(st, 1, 8, fp);
 		if (strncmp(st, "wrldstar", 8) != 0)
 		{
-			fclose(fp);
+			F_CLOSE(fp);
 			printf(" bad file.\n");
 			return 0;
 		}
-		fread(&siglen, sizeof(int), 1, fp);
-		fread(&rate, sizeof(int), 1, fp);
-		fread(&tn, sizeof(unsigned short), 1, fp);
-		fread(&us, sizeof(unsigned short), 1, fp);
+		F_READ(&siglen, sizeof(int), 1, fp);
+		F_READ(&rate, sizeof(int), 1, fp);
+		F_READ(&tn, sizeof(unsigned short), 1, fp);
+		F_READ(&us, sizeof(unsigned short), 1, fp);
 		if (tn == tLen && us == (fftl / 2 + 1) && signalLen == siglen && fs == rate)
 		{
 			specgram = (double **)malloc(tLen * sizeof(double *));
@@ -384,7 +384,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 						for (j = 0; j <= fftl / 2; j++)
 						{
 							unsigned short v;
-							fread(&v, sizeof(unsigned short), 1, fp);
+							F_READ(&v, sizeof(unsigned short), 1, fp);
 							//= (unsigned short)(log(specgram[i][j]*(2048.0*2048*2048)+1) * 512.0 + 0.5);
 							specgram[i][j] = (exp(v / 1024.0) - 1) * 1.16415321826935E-10; // /(2048.0*2048*2048);
 						}
@@ -414,7 +414,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 		{
 			tn = 0;
 		}
-		fclose(fp);
+		F_CLOSE(fp);
 	}
 	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return specgram;
