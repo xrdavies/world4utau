@@ -1,3 +1,6 @@
 *.o
+*.lo
+*.la
 *.exe
 world4utau
+bin/
