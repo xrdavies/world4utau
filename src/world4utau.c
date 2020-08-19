@@ -299,10 +299,7 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 	char fname1[512];
 	makeFilename(filename, ".dio", fname1);
 
-	// DWORD elapsedTime;
-
 	printf("write .dio\n");
-	// elapsedTime = timeGetTime();
 
 	//FILE *ft = fopen("dio0.txt", "wt");
 	FILE *f = fopen(fname1, "wb");
@@ -343,7 +340,6 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 {
 	int i, j;
 	char fname2[512];
-	// DWORD elapsedTime;
 	unsigned short tn = 0;
 	unsigned short us = 0;
 	int siglen = 0;
@@ -353,7 +349,6 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 	makeFilename(filename, ".star", fname2);
 
 	printf("read .star:\n");
-	// elapsedTime = timeGetTime();
 
 	F_FILE *fp = F_OPEN(fname2, "rb");
 	if (fp)
@@ -416,13 +411,11 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 		}
 		F_CLOSE(fp);
 	}
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return specgram;
 }
 double **getSTARParam(double x[], int signalLen, int fs, double t[], double f0[], int tLen, int fftl)
 {
 	printf("STAR:");
-	// DWORD elapsedTime = timeGetTime();
 
 	double **specgram = (double **)malloc(sizeof(double *) * tLen);
 	if (specgram)
@@ -460,7 +453,6 @@ double **getSTARParam(double x[], int signalLen, int fs, double t[], double f0[]
 	{
 		fprintf(stderr, " メモリーが確保できません。\n");
 	}
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return specgram;
 }
 void writeSTARParam(int signalLen, int fs, const char *filename, double *specgram[], int tLen, int fftl)
@@ -472,7 +464,6 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 	makeFilename(filename, ".star", fname2);
 
 	printf("write .star:");
-	// DWORD elapsedTime = timeGetTime();
 
 	short max = -32767, min = 32767;
 	//FILE *ft = fopen("star0.txt", "wt");
@@ -517,7 +508,6 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 		fclose(f1);
 	}
 	//fclose(ft);
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	printf("max = %d, min = %d\n", max, min);
 }
 double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen, int fftl)
@@ -892,6 +882,8 @@ int main(int argc, char *argv[])
 			tLen = 0;
 		}
 	}
+
+
 	if (tLen == 0)
 	{
 		freeSpecgram(specgram, tLen);
@@ -922,7 +914,7 @@ int main(int argc, char *argv[])
 			SAFE_FREE(t);
 			SAFE_FREE(f0);
 			fprintf(stderr, "error: STAR initialization failed．\n"); // STAR参数创建失败。
-			return 0;
+			return -1;
 		}
 		else
 		{
@@ -936,7 +928,7 @@ int main(int argc, char *argv[])
 			SAFE_FREE(f0);
 			SAFE_FREE(specgram);
 			fprintf(stderr, "error: Platinum initialization failed．\n"); // STAR参数创建失败
-			return 0;
+			return -1;
 		}
 		else
 		{
@@ -1009,9 +1001,9 @@ int main(int argc, char *argv[])
 	}
 	if (offset + blank >= wavelength)
 	{
+		SAFE_FREE(x);
 		fprintf(stderr, "error: パラメータ異常．\n"); // 参数错误
-		free(x);
-		return 0;
+		return -1;
 	}
 	if (offset + blank + fixed >= wavelength)
 	{
@@ -1024,9 +1016,9 @@ int main(int argc, char *argv[])
 	l2 = length_req - l1;
 	if (m2 <= 0 && l2 > 0)
 	{
+		SAFE_FREE(x);
 		fprintf(stderr, "error: パラメータ異常2．\n"); // 参数错误2
-		free(x);
-		return 0;
+		return -1;
 	}
 
 	double stretch = m2 / l2;
