@@ -6,6 +6,7 @@
 #endif
 
 #include "timer.h"
+#include <stddef.h>
 
 
 /* Returns the amount of milliseconds elapsed since the UNIX epoch. Works on both
