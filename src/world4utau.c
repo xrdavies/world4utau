@@ -216,10 +216,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 
 	makeFilename(filename, ".dio", fname1);
 
-	// DWORD elapsedTime;
-
 	printf("read .dio:\n");
-	// elapsedTime = timeGetTime();
 
 	F_FILE *fp = F_OPEN(fname1, "rb");
 	if (fp)
@@ -263,15 +260,12 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 	*p_f0 = f0;
 	*p_fs = fs;
 	*p_siglen = siglen;
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return tLen;
 }
 
 int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p_t[], double *p_f0[])
 {
-	// DWORD elapsedTime;
 	printf("DIO:");
-	// elapsedTime = timeGetTime();
 	int tLen = getSamplesForDIO(fs, signalLen, framePeriod);
 	double *t = (double *)malloc(tLen * sizeof(double));
 	double *f0 = (double *)malloc(tLen * sizeof(double));
@@ -291,7 +285,6 @@ int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p
 	}
 	*p_t = t;
 	*p_f0 = f0;
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return tLen;
 }
 int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double t[], double f0[])
@@ -332,7 +325,6 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 		fclose(f);
 	}
 
-	// printf(": %d [msec]\n", timeGetTime() - elapsedTime);
 	return 0;
 }
 //void getSTARParam(double x[], int signalLen, int fs, const char *filename, double t[], double f0[], double *specgram[], int tLen, int fftl, int flag_G)
@@ -513,8 +505,6 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen, int fftl)
 {
 	int i, j;
-
-	// DWORD elapsedTime;
 	unsigned short tn = 0;
 	unsigned short us = 0;
 	int siglen = 0;
@@ -525,7 +515,6 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 	makeFilename(filename, ".platinum", fname3);
 
 	printf("read .platinum:\n");
-	// elapsedTime = timeGetTime();
 
 	// FILE *fp = fopen(fname3, "rb");
 	F_FILE *fp = F_OPEN(fname3, "rb");
@@ -584,14 +573,11 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 		}
 		F_CLOSE(fp);
 	}
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return residualSpecgram;
 }
 double **getPlatinumParam(double x[], int signalLen, int fs, double t[], double f0[], double *specgram[], int tLen, int fftl)
 {
 	printf("PLATINUM:");
-	// DWORD elapsedTime = timeGetTime();
-
 	double **residualSpecgram = (double **)malloc(sizeof(double *) * tLen);
 	if (residualSpecgram)
 	{
@@ -628,16 +614,13 @@ double **getPlatinumParam(double x[], int signalLen, int fs, double t[], double 
 	{
 		fprintf(stderr, " メモリーが確保できません。\n");
 	}
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 	return residualSpecgram;
 }
 void writePlatinumParam(int signalLen, int fs, const char *filename, double *residualSpecgram[], int tLen, int fftl)
 {
-	int i, j;
-	// DWORD elapsedTime;
 	printf("write .platinum:");
-	// elapsedTime = timeGetTime();
 
+	int i, j;
 	unsigned short tn = 0;
 	unsigned short us = 0;
 	short max = -32767, min = 32767;
@@ -693,7 +676,6 @@ void writePlatinumParam(int signalLen, int fs, const char *filename, double *res
 		fclose(f1);
 	}
 	printf("max = %d, min = %d\n", max, min);
-	// printf(" %d [msec]\n", timeGetTime() - elapsedTime);
 }
 double getFreqAvg(double f0[], int tLen)
 {
@@ -1105,7 +1087,6 @@ int main(int argc, char *argv[])
 	}
 	//出力f0数列
 	double tmo, tmi;
-	// DWORD elapsedTime = timeGetTime();
 	printf("\nTransform\n");
 #ifdef _DEBUG
 	FILE *fp0 = fopen("time.txt", "wt");
@@ -1243,17 +1224,14 @@ int main(int argc, char *argv[])
 		ratio = pow(10, -w / 200);
 		stretchSpectrum(specgram_out, oLen, ratio, fs, fftl);
 	}
-	// printf("TRANSFORM: %d [msec]\n", timeGetTime() - elapsedTime);
 
 	// 合成
 	y = (double *)malloc(sizeof(double) * outSamples);
 	memset(y, 0, sizeof(double) * outSamples);
 
 	printf("\nSynthesis\n");
-	// elapsedTime = timeGetTime();
 	//synthesis(f0out, oLen, specgram_out, residualSpecgram_out, fftl, FRAMEPERIOD, fs, y, outSamples);
 	synthesis(f0out, oLen, specgram_out, residualSpecgram_out, fftl, FRAMEPERIOD, fs, y, outSamples);
-	// printf("WORLD: %d [msec]\n", timeGetTime() - elapsedTime);
 
 	// ファイルの書き出し (内容には関係ないよ)
 	// 文件导出（与内容无关）
