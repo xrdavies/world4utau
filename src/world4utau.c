@@ -810,10 +810,8 @@ int main(int argc, char *argv[])
 	// メモリリーク検出
 	//内存泄漏检测
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	printf("./world4utau");	
 
-	PROFILER_START;
-
-	printf("./world4utau");
 	int ii = 1;
 	while (ii < argc)
 	{
@@ -822,14 +820,15 @@ int main(int argc, char *argv[])
 	}
 	printf("\n");
 
-	int i, j;
-
 	if (argc <= 4)
 	{
 		fprintf(stderr, "error: missing params．\n");
 		return 0;
 	}
 
+	PROFILER_START(total);
+
+	int i, j;
 	FILE *fp;
 	int fs, nbit = 16;
 	int flag_G = 0;
@@ -1323,7 +1322,7 @@ int main(int argc, char *argv[])
 	free(residualSpecgram_out);
 	free(pit);
 
-	PROFILER_END;
+	PROFILER_END(total);
 
 	return 0;
 }

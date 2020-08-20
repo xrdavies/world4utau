@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-#define PROFILER_START uint64 timer_start = GetTimeMs64()
-#define PROFILER_END printf("Elapse time in ms: %lld\n", GetTimeMs64() - timer_start)
+#define PROFILER_START(label) uint64 timer_start_##label = GetTimeMs64()
+#define PROFILER_END(label) printf("Elapse time " #label " in ms: %lld\n", GetTimeMs64() - timer_start_##label)
 
 uint64 GetTimeMs64();
 
