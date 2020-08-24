@@ -12,8 +12,10 @@
 #pragma warning(disable : 4996)
 
 /* wavread関数の移植 */
-double *wavread(char *filename, int *fs, int *Nbit, int *waveLength)
-{
+double *wavread(const char *filename, int *fs, int *Nbit, int *waveLength)
+{	
+	printf("read .wav:\n");
+
 	F_FILE *fp;
 	char dataCheck[5]; // 少し多めに
 	unsigned char forIntNumber[4];
