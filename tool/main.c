@@ -677,8 +677,9 @@ int main(int argc, char *argv[])
 
                 if (strstr(entry->d_name, ".wav"))
                 {
-                    char path[512] = {0};
-                    char tmp[512] = {0};
+                    printf("list file [%s]\n", entry->d_name);
+                    char path[4096] = {0};
+                    char tmp[1024] = {0};
                     sprintf(tmp, "%s/%s", argv[1], entry->d_name);
                     realpath(tmp, path);
                     generateParams(path);
