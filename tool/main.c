@@ -681,9 +681,9 @@ int main(int argc, char *argv[])
                     char path[4096] = {0};
                     char tmp[1024] = {0};
                     sprintf(tmp, "%s/%s", argv[1], entry->d_name);
-                    realpath(tmp, path);
-                    generateParams(path);
-                    printf("list file [%s]\n", path);
+                    char * real = realpath(tmp, path);
+                    generateParams(real);
+                    printf("list file [%s]\n", real);
                 }
             }
             else
