@@ -1011,6 +1011,7 @@ int main(int argc, char *argv[])
 	int outSamples = (int)(length_req * 0.001 * fs + 1);
 	int oLen = getSamplesForDIO(fs, outSamples, FRAMEPERIOD);
 
+#ifdef _DEBBUG
 	printf("File information\n");
 	printf("Sampling : %d Hz %d Bit\n", fs, nbit);
 	printf("Input:\n");
@@ -1019,6 +1020,7 @@ int main(int argc, char *argv[])
 	printf("Output:\n");
 	printf("Length %d [sample]\n", outSamples);
 	printf("Length %f [sec]\n", (double)outSamples / (double)fs);
+#endif
 
 	// FIXME: what does this mean?? [ruix]
 	int flag_t = 0;
