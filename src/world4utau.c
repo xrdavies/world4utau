@@ -199,7 +199,7 @@ void makeFilename(const char *filename, const char *ext, char *output)
 		*cp = 0;
 	strcat(output, ext);
 
-	printf("%s\n", output);
+	log_info("%s\n", output);
 }
 
 //TODO 分析ファイルが揃ってたらwaveは読まなくて良い。（今は必ず読んでる）
@@ -216,7 +216,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 
 	makeFilename(filename, ".dio", fname1);
 
-	printf("read .dio:\n");
+	log_info("read .dio:\n");
 
 	F_FILE *fp = F_OPEN(fname1, "rb");
 	if (fp)
@@ -226,7 +226,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 		if (strncmp(d, "wrld-dio", 8) != 0)
 		{
 			F_CLOSE(fp);
-			printf(" bad file.\n");
+			log_err(" bad file.\n");
 			return 0;
 		}
 		F_READ(&siglen, sizeof(int), 1, fp);
@@ -251,7 +251,7 @@ int readDIOParam(const char *filename, double *p_t[], double *p_f0[], int *p_fs,
 				t = 0;
 				f0 = 0;
 				tLen = 0;
-				fprintf(stderr, " メモリーが確保できません。\n");
+				log_err(" メモリーが確保できません。\n");
 			}
 		}
 		F_CLOSE(fp);
@@ -275,7 +275,7 @@ int getDIOParam(double x[], int signalLen, int fs, double framePeriod, double *p
 	}
 	else
 	{
-		fprintf(stderr, " メモリーが確保できません。\n");
+		log_err(" メモリーが確保できません。\n");
 		// fprintf(stderr, "无法保护内存。 %d\n");
 		SAFE_FREE(t);
 		SAFE_FREE(f0);
@@ -292,7 +292,7 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 	char fname1[512];
 	makeFilename(filename, ".dio", fname1);
 
-	printf("write .dio\n");
+	log_info("write .dio\n");
 
 	//FILE *ft = fopen("dio0.txt", "wt");
 	FILE *f = fopen(fname1, "wb");
@@ -313,9 +313,7 @@ int writeDIOParam(int signalLen, int fs, int tLen, const char *filename, double 
 			un = fpclassify(f0[i]);
 			if (un == FP_NAN || un == FP_INFINITE || un == FP_SUBNORMAL)
 			{
-#ifdef _DEBUG
-				printf("un[%d]=%04x!\n", i, un);
-#endif
+				log_debug("un[%d]=%04x!\n", i, un);
 				f0[i] = 0;
 			}
 			fwrite(&(t[i]), sizeof(double), 1, f);
@@ -340,7 +338,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 
 	makeFilename(filename, ".star", fname2);
 
-	printf("read .star:\n");
+	log_info("read .star:\n");
 
 	F_FILE *fp = F_OPEN(fname2, "rb");
 	if (fp)
@@ -350,7 +348,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 		if (strncmp(st, "wrldstar", 8) != 0)
 		{
 			F_CLOSE(fp);
-			printf(" bad file.\n");
+			log_err(" bad file.\n");
 			return 0;
 		}
 		F_READ(&siglen, sizeof(int), 1, fp);
@@ -389,12 +387,12 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 					}
 					free(specgram);
 					specgram = 0;
-					fprintf(stderr, " メモリーが確保できません。%d\n", i);
+					log_err(" メモリーが確保できません。%d\n", i);
 				}
 			}
 			else
 			{
-				fprintf(stderr, " メモリーが確保できません。\n");
+				log_err(" メモリーが確保できません。\n");
 			}
 		}
 		else
@@ -407,7 +405,7 @@ double **readSTARParam(int signalLen, int fs, const char *filename, int tLen, in
 }
 double **getSTARParam(double x[], int signalLen, int fs, double t[], double f0[], int tLen, int fftl)
 {
-	printf("STAR:");
+	log_info("STAR:");
 
 	double **specgram = (double **)malloc(sizeof(double *) * tLen);
 	if (specgram)
@@ -438,12 +436,12 @@ double **getSTARParam(double x[], int signalLen, int fs, double t[], double f0[]
 			}
 			free(specgram);
 			specgram = 0;
-			fprintf(stderr, " メモリーが確保できません。%d\n", i);
+			log_err(" メモリーが確保できません。%d\n", i);
 		}
 	}
 	else
 	{
-		fprintf(stderr, " メモリーが確保できません。\n");
+		log_err(" メモリーが確保できません。\n");
 	}
 	return specgram;
 }
@@ -455,7 +453,7 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 	char fname2[512];
 	makeFilename(filename, ".star", fname2);
 
-	printf("write .star:");
+	log_info("write .star:");
 
 	short max = -32767, min = 32767;
 	//FILE *ft = fopen("star0.txt", "wt");
@@ -479,9 +477,7 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 				if (un == FP_NAN || un == FP_INFINITE || un == FP_SUBNORMAL)
 				{
 					specgram[i][j] = 0;
-#ifdef _DEBUG
-					printf("un[%d][%d]=%04x!\n", i, j, un);
-#endif
+					log_debug("un[%d][%d]=%04x!\n", i, j, un);
 				}
 				unsigned short v = (unsigned short)(log(specgram[i][j] * (2048.0 * 2048 * 2048) + 1) * 1024.0 + 0.5);
 				fwrite(&v, sizeof(unsigned short), 1, f1);
@@ -500,7 +496,7 @@ void writeSTARParam(int signalLen, int fs, const char *filename, double *specgra
 		fclose(f1);
 	}
 	//fclose(ft);
-	printf("max = %d, min = %d\n", max, min);
+	log_info("max = %d, min = %d\n", max, min);
 }
 double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen, int fftl)
 {
@@ -514,7 +510,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 	char fname3[512];
 	makeFilename(filename, ".platinum", fname3);
 
-	printf("read .platinum:\n");
+	log_info("read .platinum:\n");
 
 	// FILE *fp = fopen(fname3, "rb");
 	F_FILE *fp = F_OPEN(fname3, "rb");
@@ -525,7 +521,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 		if (strncmp(b, "platinum", 8) != 0)
 		{
 			F_CLOSE(fp);
-			printf(" bad file.\n");
+			log_err(" bad file.\n");
 			return 0;
 		}
 		F_READ(&siglen, sizeof(int), 1, fp);
@@ -563,12 +559,12 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 					}
 					free(residualSpecgram);
 					residualSpecgram = 0;
-					fprintf(stderr, " メモリーが確保できません。%d\n", i);
+					log_err(" メモリーが確保できません。%d\n", i);
 				}
 			}
 			else
 			{
-				fprintf(stderr, " メモリーが確保できません。\n");
+				log_err(" メモリーが確保できません。\n");
 			}
 		}
 		F_CLOSE(fp);
@@ -577,7 +573,7 @@ double **readPlatinumParam(int signalLen, int fs, const char *filename, int tLen
 }
 double **getPlatinumParam(double x[], int signalLen, int fs, double t[], double f0[], double *specgram[], int tLen, int fftl)
 {
-	printf("PLATINUM:");
+	log_info("PLATINUM:");
 	double **residualSpecgram = (double **)malloc(sizeof(double *) * tLen);
 	if (residualSpecgram)
 	{
@@ -607,18 +603,18 @@ double **getPlatinumParam(double x[], int signalLen, int fs, double t[], double 
 			}
 			free(residualSpecgram);
 			residualSpecgram = 0;
-			fprintf(stderr, " メモリーが確保できません。%d\n", i);
+			log_err(" メモリーが確保できません。%d\n", i);
 		}
 	}
 	else
 	{
-		fprintf(stderr, " メモリーが確保できません。\n");
+		log_err(" メモリーが確保できません。\n");
 	}
 	return residualSpecgram;
 }
 void writePlatinumParam(int signalLen, int fs, const char *filename, double *residualSpecgram[], int tLen, int fftl)
 {
-	printf("write .platinum:");
+	log_info("write .platinum:");
 
 	int i, j;
 	unsigned short tn = 0;
@@ -648,9 +644,7 @@ void writePlatinumParam(int signalLen, int fs, const char *filename, double *res
 				if (un == FP_NAN || un == FP_INFINITE || un == FP_SUBNORMAL)
 				{
 					residualSpecgram[i][j] = 0;
-#ifdef _DEBUG
-					printf("unr[%d][%d]=%04x!\n", i, j, un);
-#endif
+					log_debug("unr[%d][%d]=%04x!\n", i, j, un);
 				}
 				short v = (short)(residualSpecgram[i][j] * 256.0);
 				//v = log(v * (2048.0*2048.0*2048.0) + 1) * 1024.0;
@@ -675,7 +669,7 @@ void writePlatinumParam(int signalLen, int fs, const char *filename, double *res
 		}
 		fclose(f1);
 	}
-	printf("max = %d, min = %d\n", max, min);
+	log_info("max = %d, min = %d\n", max, min);
 }
 double getFreqAvg(double f0[], int tLen)
 {
@@ -810,19 +804,19 @@ int main(int argc, char *argv[])
 	// メモリリーク検出
 	//内存泄漏检测
 	// _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	printf("./world4utau");	
+	log_info("./world4utau");	
 
 	int ii = 1;
 	while (ii < argc)
 	{
-		printf(" '%s'", argv[ii]);
+		log_info(" '%s'", argv[ii]);
 		ii++;
 	}
-	printf("\n");
+	log_info("\n");
 
 	if (argc <= 4)
 	{
-		fprintf(stderr, "error: missing params．\n");
+		log_err("error: missing params．\n");
 		return 0;
 	}
 
@@ -873,7 +867,7 @@ int main(int argc, char *argv[])
 		x = wavread(argv[1], &fs, &nbit, &signalLen);
 		if (x == NULL)
 		{
-			fprintf(stderr, "error: 指定されたファイルは存在しません．\n"); // 指定的文件不存在
+			log_err("error: 指定されたファイルは存在しません．\n"); // 指定的文件不存在
 			return 0;
 		}
 		tLen = getDIOParam(x, signalLen, fs, FRAMEPERIOD, &t, &f0);
@@ -884,7 +878,7 @@ int main(int argc, char *argv[])
 		else
 		{
 			SAFE_FREE(x);
-			fprintf(stderr, "error: DIO initialization failed．\n"); // DIO参数创建失败
+			log_err("error: DIO initialization failed．\n"); // DIO参数创建失败
 			return 0;
 		}
 		fftl = getFFTLengthForStar(fs);
@@ -894,7 +888,7 @@ int main(int argc, char *argv[])
 			SAFE_FREE(x);
 			SAFE_FREE(t);
 			SAFE_FREE(f0);
-			fprintf(stderr, "error: STAR initialization failed．\n"); // STAR参数创建失败。
+			log_err("error: STAR initialization failed．\n"); // STAR参数创建失败。
 			return -1;
 		}
 		else
@@ -908,7 +902,7 @@ int main(int argc, char *argv[])
 			SAFE_FREE(t);
 			SAFE_FREE(f0);
 			SAFE_FREE(specgram);
-			fprintf(stderr, "error: Platinum initialization failed．\n"); // STAR参数创建失败
+			log_err("error: Platinum initialization failed．\n"); // STAR参数创建失败
 			return -1;
 		}
 		else
@@ -957,14 +951,13 @@ int main(int argc, char *argv[])
 		sscanf(argv[9], "%lf", &blank);
 	}
 
-#ifdef _DEBBUG
-	printf("Parameters\n");
-	printf("velocity      :%lf\n", velocity);
-	printf("offset        :%lf\n", offset);
-	printf("request length:%lf\n", length_req);
-	printf("fixed         :%lf\n", fixed);
-	printf("blank         :%lf\n", blank);
-#endif
+
+	log_debug("Parameters\n");
+	log_debug("velocity      :%lf\n", velocity);
+	log_debug("offset        :%lf\n", offset);
+	log_debug("request length:%lf\n", length_req);
+	log_debug("fixed         :%lf\n", fixed);
+	log_debug("blank         :%lf\n", blank);
 	//伸縮の概念図
 	//  offset    fixed      m2      blank
 	//|--------|--------|---------|---------| 原音
@@ -983,7 +976,7 @@ int main(int argc, char *argv[])
 	if (offset + blank >= wavelength)
 	{
 		SAFE_FREE(x);
-		fprintf(stderr, "error: パラメータ異常．\n"); // 参数错误
+		log_err("error: パラメータ異常．\n"); // 参数错误
 		return -1;
 	}
 	if (offset + blank + fixed >= wavelength)
@@ -998,7 +991,7 @@ int main(int argc, char *argv[])
 	if (m2 <= 0 && l2 > 0)
 	{
 		SAFE_FREE(x);
-		fprintf(stderr, "error: パラメータ異常2．\n"); // 参数错误2
+		log_err("error: パラメータ異常2．\n"); // 参数错误2
 		return -1;
 	}
 
@@ -1011,16 +1004,14 @@ int main(int argc, char *argv[])
 	int outSamples = (int)(length_req * 0.001 * fs + 1);
 	int oLen = getSamplesForDIO(fs, outSamples, FRAMEPERIOD);
 
-#ifdef _DEBBUG
-	printf("File information\n");
-	printf("Sampling : %d Hz %d Bit\n", fs, nbit);
-	printf("Input:\n");
-	printf("Length %d [sample]\n", signalLen);
-	printf("Length %f [sec]\n", (double)signalLen / (double)fs);
-	printf("Output:\n");
-	printf("Length %d [sample]\n", outSamples);
-	printf("Length %f [sec]\n", (double)outSamples / (double)fs);
-#endif
+	log_debug("File information\n");
+	log_debug("Sampling : %d Hz %d Bit\n", fs, nbit);
+	log_debug("Input:\n");
+	log_debug("Length %d [sample]\n", signalLen);
+	log_debug("Length %f [sec]\n", (double)signalLen / (double)fs);
+	log_debug("Output:\n");
+	log_debug("Length %d [sample]\n", outSamples);
+	log_debug("Length %f [sec]\n", (double)outSamples / (double)fs);
 
 	// FIXME: what does this mean?? [ruix]
 	int flag_t = 0;
@@ -1047,12 +1038,10 @@ int main(int argc, char *argv[])
 	double target_freq = name2freq(argv[3], flag_t);
 	double freq_avg = getFreqAvg(f0, tLen);
 
-#ifdef _DEBUG
-	printf("volume        :%lf\n", volume);
-	printf("modulation    :%lf\n", modulation);
-	printf("target frequency     :%lf\n", target_freq);
-	printf("input frequency(avg.):%lf\n", freq_avg);
-#endif
+	log_debug("volume        :%lf\n", volume);
+	log_debug("modulation    :%lf\n", modulation);
+	log_debug("target frequency     :%lf\n", target_freq);
+	log_debug("input frequency(avg.):%lf\n", freq_avg);
 
 	double *f0out = (double *)malloc(oLen * sizeof(double));
 	memset(f0out, 0, sizeof(double) * oLen);
@@ -1088,7 +1077,7 @@ int main(int argc, char *argv[])
 	}
 	//出力f0数列
 	double tmo, tmi;
-	printf("\nTransform\n");
+	log_info("\nTransform\n");
 #ifdef _DEBUG
 	FILE *fp0 = fopen("time.txt", "wt");
 	FILE *fp1 = fopen("dio.txt", "wt");
@@ -1230,7 +1219,7 @@ int main(int argc, char *argv[])
 	y = (double *)malloc(sizeof(double) * outSamples);
 	memset(y, 0, sizeof(double) * outSamples);
 
-	printf("\nSynthesis\n");
+	log_info("\nSynthesis\n");
 	//synthesis(f0out, oLen, specgram_out, residualSpecgram_out, fftl, FRAMEPERIOD, fs, y, outSamples);
 	synthesis(f0out, oLen, specgram_out, residualSpecgram_out, fftl, FRAMEPERIOD, fs, y, outSamples);
 
@@ -1298,7 +1287,7 @@ int main(int argc, char *argv[])
 	fwrite(output, sizeof(short), outSamples, fp);
 	fclose(fp);
 
-	printf("complete.\n");
+	log_info("complete.\n");
 
 	// メモリの解放
 	free(output);

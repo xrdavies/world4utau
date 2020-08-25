@@ -7,7 +7,7 @@
 
 #include "log.h"
 
-int log(int level, const char *format, ...)
+int _log(int level, const char *format, ...)
 {
 	static const char lvl[] = "ERROWARNINFODBUG";
 	char tbuf[64] = {0}, buf[64] = {0};

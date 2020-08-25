@@ -8,13 +8,14 @@
 #include "wavread.h"
 #include "common.h"
 #include "MemFile.h"
+#include "log.h"
 
 #pragma warning(disable : 4996)
 
 /* wavread関数の移植 */
 double *wavread(const char *filename, int *fs, int *Nbit, int *waveLength)
 {	
-	printf("read .wav:\n");
+	log_info("read .wav:\n");
 
 	F_FILE *fp;
 	char dataCheck[5]; // 少し多めに
@@ -28,51 +29,57 @@ double *wavread(const char *filename, int *fs, int *Nbit, int *waveLength)
 	fp = F_OPEN(filename, "rb");
 	if (NULL == fp)
 	{
-		printf("ファイルのロードに失敗\n");
+		log_err("ファイルのロードに失敗\n");
 		return NULL;
 	}
+
 	//ヘッダのチェック
 	F_READ(dataCheck, sizeof(char), 4, fp); // "RIFF"
 	if (0 != strcmp(dataCheck, "RIFF"))
 	{
 		F_CLOSE(fp);
-		printf("ヘッダRIFFが不正\n");
+		log_err("ヘッダRIFFが不正\n");
 		return NULL;
 	}
+
 	F_SEEK(fp, 4, SEEK_CUR);				   // 4バイト飛ばす
 	F_READ(dataCheck, sizeof(char), 4, fp); // "WAVE"
 	if (0 != strcmp(dataCheck, "WAVE"))
 	{
 		F_CLOSE(fp);
-		printf("ヘッダWAVEが不正\n");
+		log_err("ヘッダWAVEが不正\n");
 		return NULL;
 	}
+
 	F_READ(dataCheck, sizeof(char), 4, fp); // "fmt "
 	if (0 != strcmp(dataCheck, "fmt "))
 	{
 		F_CLOSE(fp);
-		printf("ヘッダfmt が不正\n");
+		log_err("ヘッダfmt が不正\n");
 		return NULL;
 	}
+
 	F_READ(dataCheck, sizeof(char), 4, fp); //1 0 0 0
 	if (!(16 == dataCheck[0] && 0 == dataCheck[1] && 0 == dataCheck[2] && 0 == dataCheck[3]))
 	{
 		F_CLOSE(fp);
-		printf("ヘッダfmt (2)が不正\n");
+		log_err("ヘッダfmt (2)が不正\n");
 		return NULL;
 	}
+
 	F_READ(dataCheck, sizeof(char), 2, fp); //1 0
 	if (!(1 == dataCheck[0] && 0 == dataCheck[1]))
 	{
 		F_CLOSE(fp);
-		printf("フォーマットIDが不正\n");
+		log_err("フォーマットIDが不正\n");
 		return NULL;
 	}
+
 	F_READ(dataCheck, sizeof(char), 2, fp); //1 0
 	if (!(1 == dataCheck[0] && 0 == dataCheck[1]))
 	{
 		F_CLOSE(fp);
-		printf("ステレオには対応していません\n");
+		log_err("ステレオには対応していません\n");
 		return NULL;
 	}
 
@@ -87,14 +94,16 @@ double *wavread(const char *filename, int *fs, int *Nbit, int *waveLength)
 	F_SEEK(fp, 6, SEEK_CUR); // 6バイト飛ばす
 	F_READ(forIntNumber, sizeof(char), 2, fp);
 	*Nbit = forIntNumber[0];
+
 	// ヘッダ
 	F_READ(dataCheck, sizeof(char), 4, fp); // "data"
 	if (0 != strcmp(dataCheck, "data"))
 	{
 		F_CLOSE(fp);
-		printf("ヘッダdataが不正\n");
+		log_err("ヘッダdataが不正\n");
 		return NULL;
 	}
+
 	// サンプル点の数
 	F_READ(forIntNumber, sizeof(char), 4, fp); // "data"
 	*waveLength = 0;

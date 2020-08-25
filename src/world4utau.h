@@ -48,5 +48,6 @@
 #include "wavread.h"
 #include "common.h"
 #include "timer.h"
+#include "log.h"
 
 #endif
