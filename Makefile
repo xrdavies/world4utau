@@ -16,7 +16,7 @@ OBJS_WITH_DIR = $(addprefix $(OBJ_DIR)/,$(OBJS))
 
 TARGET = $(OUT_DIR)/$(TARGET_NAME)
 INCLUDES = -I$(SRC_DIR)
-CFLAGS =  -D_DEBBUG -O3 #-g -Wall
+CFLAGS = -O3 #-g -Wall
 LIBS = -lfftw3 -lm
 
 CC = gcc
