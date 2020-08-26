@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/time.h>
+#include <time.h>
 
 #include "log.h"
 
@@ -17,7 +18,7 @@ int _log(int level, const char *format, ...)
 
 	static const char lvl[] = "ERROWARNINFODBUG";
 	char tbuf[64] = {0}, buf[64] = {0};
-	struct tm tm;
+	struct tm _tm;
 	va_list arg;
 	struct timeval tv;
 	FILE *f;
@@ -26,8 +27,8 @@ int _log(int level, const char *format, ...)
 	
 	gettimeofday(&tv, 0);
 	t = tv.tv_sec;
-	localtime_r(&t, &tm);
-	strftime(tbuf, 64, "%Y-%m-%d %H:%M:%S", &tm);
+	localtime_r(&t, &_tm);
+	strftime(tbuf, 64, "%Y-%m-%d %H:%M:%S", &_tm);
 	
 
 	printf("%s.%03d [%.4s]  ", tbuf, (int)(tv.tv_usec / 1000), lvl + 4 * level);
