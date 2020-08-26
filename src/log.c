@@ -9,6 +9,12 @@
 
 int _log(int level, const char *format, ...)
 {
+#ifndef _DEBUG
+	if (level >= DEBUG) {
+		return 0;
+	}
+#endif
+
 	static const char lvl[] = "ERROWARNINFODBUG";
 	char tbuf[64] = {0}, buf[64] = {0};
 	struct tm tm;
