@@ -11,7 +11,7 @@
 // Output:
 //   Calculated standard deviation
 //-----------------------------------------------------------------------------
-double m_std(double *x, int xLen);
+double m_std(double *x, int x_length);
 
 
 void m_inv(double **r, int n, double **invr);
@@ -59,7 +59,7 @@ float m_randn(void);
 // Caution:
 //   Lengths of index and edges must be the same.
 //-----------------------------------------------------------------------------
-void m_histc(double *x, int xLen, double *y, int yLen, int *index);
+void m_histc(double *x, int x_length, double *y, int yLen, int *index);
 
 //-----------------------------------------------------------------------------
 // interp1() interpolates to find yi, the values of the underlying function Y
@@ -90,7 +90,7 @@ void m_interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 // Output:
 //   y          : Output signal
 //-----------------------------------------------------------------------------
-long m_decimateForF0(const double *x, int xLen, double *y, int r);
+long m_decimateForF0(const double *x, int x_length, double *y, int r);
 
 
 //-----------------------------------------------------------------------------

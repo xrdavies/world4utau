@@ -5,7 +5,7 @@
 // histc based on Matlab
 // This function is hidden.
 // length of i (Index) and y is the same.
-void m_histc(double *x, int xLen, double *y, int yLen, int *index)
+void m_histc(double *x, int x_length, double *y, int yLen, int *index)
 {
 	int i;
 	int count = 1;
@@ -25,7 +25,7 @@ void m_histc(double *x, int xLen, double *y, int yLen, int *index)
 			index[i] = count++;
 			i--;
 		}
-		if (count == xLen)
+		if (count == x_length)
 			break;
 	}
 	count--;
@@ -68,8 +68,7 @@ void m_interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 	free(h);
 }
 
-
-static void FilterForDecimate(double *x, int xLen, double *y, int r)
+static void FilterForDecimate(double *x, int x_length, double *y, int r)
 {
 	double w[3], wt;
 	w[0] = w[1] = w[2] = 0.0;
@@ -120,7 +119,7 @@ static void FilterForDecimate(double *x, int xLen, double *y, int r)
 		b[1] = 0.50392394045406674;
 	}
 
-	for (int i = 0; i < xLen; i++)
+	for (int i = 0; i < x_length; i++)
 	{
 		wt = x[i] + a[0] * w[0] + a[1] * w[1] + a[2] * w[2];
 
@@ -132,33 +131,33 @@ static void FilterForDecimate(double *x, int xLen, double *y, int r)
 	}
 }
 
-long m_decimateForF0(const double *x, int xLen, double *y, int r)
+long m_decimateForF0(const double *x, int x_length, double *y, int r)
 {
 	int nfact = 9; // 多分これは固定でOK
 	double *tmp1, *tmp2;
-	tmp1 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
-	tmp2 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
+	tmp1 = (double *)malloc(sizeof(double) * (x_length + nfact * 2));
+	tmp2 = (double *)malloc(sizeof(double) * (x_length + nfact * 2));
 
 	int i;
 	for (i = 0; i < nfact; i++)
 		tmp1[i] = 2 * x[0] - x[nfact - i];
-	for (i = nfact; i < nfact + xLen; i++)
+	for (i = nfact; i < nfact + x_length; i++)
 		tmp1[i] = x[i - nfact];
-	for (i = nfact + xLen; i < 2 * nfact + xLen; i++)
-		tmp1[i] = 2 * x[xLen - 1] - x[xLen - 2 - (i - (nfact + xLen))];
+	for (i = nfact + x_length; i < 2 * nfact + x_length; i++)
+		tmp1[i] = 2 * x[x_length - 1] - x[x_length - 2 - (i - (nfact + x_length))];
 
-	FilterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
-	for (i = 0; i < 2 * nfact + xLen; i++)
-		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
-	FilterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
-	for (i = 0; i < 2 * nfact + xLen; i++)
-		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
+	FilterForDecimate(tmp1, 2 * nfact + x_length, tmp2, r);
+	for (i = 0; i < 2 * nfact + x_length; i++)
+		tmp1[i] = tmp2[2 * nfact + x_length - i - 1];
+	FilterForDecimate(tmp1, 2 * nfact + x_length, tmp2, r);
+	for (i = 0; i < 2 * nfact + x_length; i++)
+		tmp1[i] = tmp2[2 * nfact + x_length - i - 1];
 
-	int nout = (int)(xLen / r) + 1;
-	int nbeg = r - (r * nout - xLen);
+	int nout = (int)(x_length / r) + 1;
+	int nbeg = r - (r * nout - x_length);
 	int count;
 
-	for (i = nbeg, count = 0; i < xLen + nfact; i += r, count++)
+	for (i = nbeg, count = 0; i < x_length + nfact; i += r, count++)
 		y[count] = tmp1[i + nfact - 1];
 
 	free(tmp1);
@@ -341,19 +340,19 @@ void m_inv(double **r, int n, double **invr)
 	}
 }
 
-double m_std(double *x, int xLen)
+double m_std(double *x, int x_length)
 {
 	int i;
 	double average, s;
 	average = 0.0;
-	for (i = 0; i < xLen; i++)
+	for (i = 0; i < x_length; i++)
 		average += x[i];
-	average /= (double)xLen;
+	average /= (double)x_length;
 
 	s = 0.0;
-	for (i = 0; i < xLen; i++)
+	for (i = 0; i < x_length; i++)
 		s += pow(x[i] - average, 2.0);
-	s /= (double)(xLen - 1);
+	s /= (double)(x_length - 1);
 
 	return sqrt(s);
 }
