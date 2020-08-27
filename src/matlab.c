@@ -340,6 +340,14 @@ void m_inv(double **r, int n, double **invr)
 	}
 }
 
+
+void fftshift(const double *x, int x_length, double *y) {
+  for (int i = 0; i < x_length / 2; ++i) {
+    y[i] = x[i + x_length / 2];
+    y[i + x_length / 2] = x[i];
+  }
+}
+
 double m_std(double *x, int x_length)
 {
 	int i;

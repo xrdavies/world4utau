@@ -138,4 +138,21 @@ void m_diff(double *x, int x_length, double *ans);
 //-----------------------------------------------------------------------------
 void m_interp1Q(double x, double shift, double *y, int x_length, double *xi, int xi_length, double *ans);
 
+
+//-----------------------------------------------------------------------------
+// fftshift() swaps the left and right halves of input vector.
+// http://www.mathworks.com/help/matlab/ref/fftshift.html
+//
+// Input:
+//   x              : Input vector
+//   x_length       : Length of x
+//
+// Output:
+//   y              : Swapped vector x
+//
+// Caution:
+//   Lengths of index and edges must be the same.
+//-----------------------------------------------------------------------------
+void fftshift(const double *x, int x_length, double *y);
+
 #endif
