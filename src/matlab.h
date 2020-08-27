@@ -115,7 +115,7 @@ int m_round(double x);
 // Output:
 //   y          : Output signal
 //-----------------------------------------------------------------------------
-void m_diff(double *x, int xLength, double *ans);
+void m_diff(double *x, int x_length, double *ans);
 
 
 //-----------------------------------------------------------------------------
@@ -136,6 +136,6 @@ void m_diff(double *x, int xLength, double *ans);
 // Caution:
 //   Length of xi and yi must be the same.
 //-----------------------------------------------------------------------------
-void m_interp1Q(double x, double shift, double *y, int xLength, double *xi, int xiLength, double *ans);
+void m_interp1Q(double x, double shift, double *y, int x_length, double *xi, int xi_length, double *ans);
 
 #endif

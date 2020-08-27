@@ -173,9 +173,9 @@ int m_round(double x)
 		return (int)(x - 0.5);
 }
 
-void m_diff(double *x, int xLength, double *ans)
+void m_diff(double *x, int x_length, double *ans)
 {
-	for (int i = 0; i < xLength - 1; i++)
+	for (int i = 0; i < x_length - 1; i++)
 	{
 		ans[i] = x[i + 1] - x[i];
 	}
@@ -184,27 +184,27 @@ void m_diff(double *x, int xLength, double *ans)
 
 // サンプリング間隔が等間隔に限定し高速に動作するinterp1．
 // 基本的には同じだが，配列の要素数を明示的に指定する必要がある．
-void m_interp1Q(double x, double shift, double *y, int xLength, double *xi, int xiLength, double *ans)
+void m_interp1Q(double x, double shift, double *y, int x_length, double *xi, int xi_length, double *ans)
 {
 	double deltaX;
 	double *xiFraction, *deltaY;
 	int *xiBase;
 	int i;
 
-	xiFraction = (double *)malloc(xiLength * sizeof(double));
-	deltaY = (double *)malloc(xLength * sizeof(double));
-	xiBase = (int *)malloc(xiLength * sizeof(int));
+	xiFraction = (double *)malloc(xi_length * sizeof(double));
+	deltaY = (double *)malloc(x_length * sizeof(double));
+	xiBase = (int *)malloc(xi_length * sizeof(int));
 
 	deltaX = shift;
-	for (i = 0; i < xiLength; i++)
+	for (i = 0; i < xi_length; i++)
 	{
 		xiBase[i] = (int)floor((xi[i] - x) / deltaX);
 		xiFraction[i] = (double)(xi[i] - x) / deltaX - (double)xiBase[i];
 	}
-	m_diff(y, xLength, deltaY);
-	deltaY[xLength - 1] = 0.0;
+	m_diff(y, x_length, deltaY);
+	deltaY[x_length - 1] = 0.0;
 
-	for (i = 0; i < xiLength; i++)
+	for (i = 0; i < xi_length; i++)
 	{
 		ans[i] = y[xiBase[i]] + deltaY[xiBase[i]] * xiFraction[i];
 	}
