@@ -55,7 +55,7 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	for(i = -nFragment, j = 0;i <= nFragment;i++, j++) 
 		baseIndex[j] = i;
 	for(i = 0;i <= nFragment*2;i++) 
-		index[i]  = min(xLen, max(1, round(t*(double)fs+1+baseIndex[i]) ) ) - 1;
+		index[i]  = min(xLen, max(1, m_round(t*(double)fs+1+baseIndex[i]) ) ) - 1;
 
 	double *segment, *window;
 	double position, average;
@@ -66,7 +66,7 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	{
 		segment[i]  = x[index[i]];
 		position  = (double)(baseIndex[i]/(double)fs/(3.0/2.0) ) + 
-			(t*(double)fs - (double)(round(t*(double)fs))) / (double)fs;
+			(t*(double)fs - (double)(m_round(t*(double)fs))) / (double)fs;
 		window[i]  = 0.5*cos(PI*position*f0) +0.5;
 		average  += window[i]*window[i];
 	}
@@ -133,10 +133,10 @@ void starGeneralBody(double *x, int xLen, int fs, double f0, double t, int fftl,
 	double *lowLevels, *highLevels;
 	lowLevels  = (double *)malloc(sizeof(double) * (fftl/2+1));
 	highLevels = (double *)malloc(sizeof(double) * (fftl/2+1));
-	interp1Q(dFrequencyAxis, dShift, dSegment, fftl/2+limit*2+1, centers, (fftl/2 + 1), lowLevels);
+	m_interp1Q(dFrequencyAxis, dShift, dSegment, fftl/2+limit*2+1, centers, (fftl/2 + 1), lowLevels);
 	for(i = 0;i <= fftl/2;i++)
 		centers[i] += f0;
-	interp1Q(dFrequencyAxis, dShift, dSegment, fftl/2+limit*2+1, centers, (fftl/2 + 1), highLevels);
+	m_interp1Q(dFrequencyAxis, dShift, dSegment, fftl/2+limit*2+1, centers, (fftl/2 + 1), highLevels);
 
 	for(i = 0;i <= fftl/2;i++)
 		sliceSTAR[i] = exp( (highLevels[i]-lowLevels[i])/f0);

@@ -50,7 +50,7 @@ void dio(double *x, int xLen, int fs, double framePeriod,
 	double *y = (double *)malloc(sizeof(double) * fftl);
 
 	// ダウンサンプリング
-	decimateForF0(x, xLen, y, decimationRatio);
+	m_decimateForF0(x, xLen, y, decimationRatio);
 
 	// 直流成分の除去 y = y - mean(y)
 	double meanY = 0.0;
@@ -413,10 +413,10 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 		for (i = 0; i < 4; i++)
 			interpolatedF0Set[i] = (double *)malloc(sizeof(double) * tLen);
 		// 4つのゼロ交差
-		interp1(nILocations, nIntervals, nLen, timeAxis, tLen, interpolatedF0Set[0]);
-		interp1(pILocations, pIntervals, pLen, timeAxis, tLen, interpolatedF0Set[1]);
-		interp1(dnILocations, dnIntervals, dnLen, timeAxis, tLen, interpolatedF0Set[2]);
-		interp1(dpILocations, dpIntervals, dpLen, timeAxis, tLen, interpolatedF0Set[3]);
+		m_interp1(nILocations, nIntervals, nLen, timeAxis, tLen, interpolatedF0Set[0]);
+		m_interp1(pILocations, pIntervals, pLen, timeAxis, tLen, interpolatedF0Set[1]);
+		m_interp1(dnILocations, dnIntervals, dnLen, timeAxis, tLen, interpolatedF0Set[2]);
+		m_interp1(dpILocations, dpIntervals, dpLen, timeAxis, tLen, interpolatedF0Set[3]);
 
 		for (i = 0; i < tLen; i++)
 		{

@@ -229,7 +229,7 @@ void platinum(double *x, int xLen, int fs, double *timeAxis, double *f0, double 
 		fixedF0[i] = f0[i] == 0 ? DEFAULT_F0 : f0[i];
 	for (i = 0; i < xLen; i++)
 		signalTime[i] = (double)i / (double)fs;
-	interp1(timeAxis, fixedF0, tLen, signalTime, xLen, f0interpolatedRaw);
+	m_interp1(timeAxis, fixedF0, tLen, signalTime, xLen, f0interpolatedRaw);
 	totalPhase[0] = f0interpolatedRaw[0] * 2 * PI / (double)fs;
 	for (i = 1; i < xLen; i++)
 		totalPhase[i] = totalPhase[i - 1] + f0interpolatedRaw[i] * 2 * PI / (double)fs;

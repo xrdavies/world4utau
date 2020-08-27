@@ -5,7 +5,7 @@
 // histc based on Matlab
 // This function is hidden.
 // length of i (Index) and y is the same.
-void histc(double *x, int xLen, double *y, int yLen, int *index)
+void m_histc(double *x, int xLen, double *y, int yLen, int *index)
 {
 	int i;
 	int count = 1;
@@ -35,7 +35,7 @@ void histc(double *x, int xLen, double *y, int yLen, int *index)
 
 // interp1 by using linear interpolation
 // This function is based on Matlab function that has the same name
-void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
+void m_interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 {
 	int i;
 	double *h, *p, *s;
@@ -54,7 +54,7 @@ void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 		k[i] = 0;
 	}
 
-	histc(t, iLen, t1, oLen, k);
+	m_histc(t, iLen, t1, oLen, k);
 
 	for (i = 0; i < oLen; i++)
 		s[i] = (t1[i] - t[k[i] - 1]) / h[k[i] - 1];
@@ -68,48 +68,8 @@ void interp1(double *t, double *y, int iLen, double *t1, int oLen, double *y1)
 	free(h);
 }
 
-// decimate by using IIR and FIR filter coefficients
-// x: Input signal whose length is xLen [sample]
-// y: Output signal
-long decimateForF0(double *x, int xLen, double *y, int r)
-{
-	//	int r = 11;
-	int nfact = 9; // 多分これは固定でOK
-	double *tmp1, *tmp2;
-	tmp1 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
-	tmp2 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
 
-	int i;
-	for (i = 0; i < nfact; i++)
-		tmp1[i] = 2 * x[0] - x[nfact - i];
-	for (i = nfact; i < nfact + xLen; i++)
-		tmp1[i] = x[i - nfact];
-	for (i = nfact + xLen; i < 2 * nfact + xLen; i++)
-		tmp1[i] = 2 * x[xLen - 1] - x[xLen - 2 - (i - (nfact + xLen))];
-
-	filterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
-	for (i = 0; i < 2 * nfact + xLen; i++)
-		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
-	filterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
-	for (i = 0; i < 2 * nfact + xLen; i++)
-		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
-
-	int nout = (int)(xLen / r) + 1;
-	int nbeg = r - (r * nout - xLen);
-	int count;
-
-	for (i = nbeg, count = 0; i < xLen + nfact; i += r, count++)
-		y[count] = tmp1[i + nfact - 1];
-
-	free(tmp1);
-	free(tmp2);
-	return count;
-}
-
-// filter based on Matlab function
-// x: Input signal whose length is xLen [sample]
-// y: Output signal
-void filterForDecimate(double *x, int xLen, double *y, int r)
+static void FilterForDecimate(double *x, int xLen, double *y, int r)
 {
 	double w[3], wt;
 	w[0] = w[1] = w[2] = 0.0;
@@ -172,17 +132,49 @@ void filterForDecimate(double *x, int xLen, double *y, int r)
 	}
 }
 
-// matlabに順ずる丸め
-// int round(double x)
-// {
-// 	if(x > 0)
-// 		return (int)(x+0.5);
-// 	else
-// 		return (int)(x-0.5);
-// }
+long m_decimateForF0(const double *x, int xLen, double *y, int r)
+{
+	int nfact = 9; // 多分これは固定でOK
+	double *tmp1, *tmp2;
+	tmp1 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
+	tmp2 = (double *)malloc(sizeof(double) * (xLen + nfact * 2));
 
-// 差分
-void diff(double *x, int xLength, double *ans)
+	int i;
+	for (i = 0; i < nfact; i++)
+		tmp1[i] = 2 * x[0] - x[nfact - i];
+	for (i = nfact; i < nfact + xLen; i++)
+		tmp1[i] = x[i - nfact];
+	for (i = nfact + xLen; i < 2 * nfact + xLen; i++)
+		tmp1[i] = 2 * x[xLen - 1] - x[xLen - 2 - (i - (nfact + xLen))];
+
+	FilterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
+	for (i = 0; i < 2 * nfact + xLen; i++)
+		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
+	FilterForDecimate(tmp1, 2 * nfact + xLen, tmp2, r);
+	for (i = 0; i < 2 * nfact + xLen; i++)
+		tmp1[i] = tmp2[2 * nfact + xLen - i - 1];
+
+	int nout = (int)(xLen / r) + 1;
+	int nbeg = r - (r * nout - xLen);
+	int count;
+
+	for (i = nbeg, count = 0; i < xLen + nfact; i += r, count++)
+		y[count] = tmp1[i + nfact - 1];
+
+	free(tmp1);
+	free(tmp2);
+	return count;
+}
+
+int m_round(double x)
+{
+	if (x > 0)
+		return (int)(x + 0.5);
+	else
+		return (int)(x - 0.5);
+}
+
+void m_diff(double *x, int xLength, double *ans)
 {
 	for (int i = 0; i < xLength - 1; i++)
 	{
@@ -193,7 +185,7 @@ void diff(double *x, int xLength, double *ans)
 
 // サンプリング間隔が等間隔に限定し高速に動作するinterp1．
 // 基本的には同じだが，配列の要素数を明示的に指定する必要がある．
-void interp1Q(double x, double shift, double *y, int xLength, double *xi, int xiLength, double *ans)
+void m_interp1Q(double x, double shift, double *y, int xLength, double *xi, int xiLength, double *ans)
 {
 	double deltaX;
 	double *xiFraction, *deltaY;
@@ -210,7 +202,7 @@ void interp1Q(double x, double shift, double *y, int xLength, double *xi, int xi
 		xiBase[i] = (int)floor((xi[i] - x) / deltaX);
 		xiFraction[i] = (double)(xi[i] - x) / deltaX - (double)xiBase[i];
 	}
-	diff(y, xLength, deltaY);
+	m_diff(y, xLength, deltaY);
 	deltaY[xLength - 1] = 0.0;
 
 	for (i = 0; i < xiLength; i++)
@@ -224,7 +216,7 @@ void interp1Q(double x, double shift, double *y, int xLength, double *xi, int xi
 }
 
 // xorshift法と中心極限定理との組み合わせ
-float randn(void)
+float m_randn(void)
 {
 	static unsigned int x = 123456789;
 	static unsigned int y = 362436069;
@@ -254,7 +246,7 @@ float randn(void)
 
 // fftfilt関数の移植
 // yは，fftl分の長さを確保すること．
-void fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y)
+void m_fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y)
 {
 	int i;
 	fftw_plan forwardFFT1, forwardFFT2, inverseFFT;
@@ -302,7 +294,7 @@ void fftfilt(double *x, int xlen, double *h, int hlen, int fftl, double *y)
 }
 
 // 2次元配列 (n*n)の逆行列を計算．メモリは確保しておくこと
-void inv(double **r, int n, double **invr)
+void m_inv(double **r, int n, double **invr)
 {
 	int i, j, k;
 	double tmp;
@@ -349,19 +341,19 @@ void inv(double **r, int n, double **invr)
 	}
 }
 
-// double std(double *x, int xLen)
-// {
-// 	int i;
-// 	double average, s;
-// 	average = 0.0;
-// 	for(i = 0;i < xLen;i++)
-// 		average += x[i];
-// 	average /= (double)xLen;
+double m_std(double *x, int xLen)
+{
+	int i;
+	double average, s;
+	average = 0.0;
+	for (i = 0; i < xLen; i++)
+		average += x[i];
+	average /= (double)xLen;
 
-// 	s = 0.0;
-// 	for(i = 0;i < xLen;i++)
-// 		s += pow(x[i] - average, 2.0);
-// 	s /= (double)(xLen-1);
+	s = 0.0;
+	for (i = 0; i < xLen; i++)
+		s += pow(x[i] - average, 2.0);
+	s /= (double)(xLen - 1);
 
-// 	return sqrt(s);
-// }
+	return sqrt(s);
+}

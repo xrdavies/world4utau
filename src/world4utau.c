@@ -749,7 +749,7 @@ void stretchSpectrum(double **specgram, int oLen, double ratio, int fs, int fftl
 		{
 			for (j = 0; j <= fftl / 2; j++)
 				spec1[j] = log(specgram[i][j]);
-			interp1(freqAxis1, spec1, fftl / 2 + 1, freqAxis2, fftl / 2 + 1, spec2);
+			m_interp1(freqAxis1, spec1, fftl / 2 + 1, freqAxis2, fftl / 2 + 1, spec2);
 			for (j = 0; j <= fftl / 2; j++)
 				specgram[i][j] = exp(spec2[j]);
 			if (ratio < 1.0)
