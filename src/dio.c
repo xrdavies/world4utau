@@ -5,7 +5,7 @@
 #include <math.h>
 
 // 内部関数(ユーザは触らないほうが良い)
-void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen, double *f0Deviations, double *interpolatedF0);
+void rawEventByDio(double boundaryF0, double fs, fftw_complex *x_spec, int x_length, int fftl, double shiftTime, double f0Floor, double f0Ceil, double *timeAxis, int tLen, double *f0Deviations, double *interpolatedF0);
 void zeroCrossingEngine(double *x, int xLen, double fs, double *eLocations, double *iLocations, double *intervals, int *iLen);
 void nuttallWindow(int yLen, double *y);
 void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen, int fs, double **f0Map, double *bestF0, double *f0);
@@ -324,7 +324,7 @@ void postprocessing(double framePeriod, double f0Floor, int candidates, int xLen
 }
 
 // イベントを計算する内部関数 (内部変数なので引数・戻り値に手加減なし)
-void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLength, int fftl, double framePeriod, double f0Floor, double f0Ceil, double *timeAxis, int tLen,
+void rawEventByDio(double boundaryF0, double fs, fftw_complex *x_spec, int x_length, int fftl, double framePeriod, double f0Floor, double f0Ceil, double *timeAxis, int tLen,
 				   double *f0Deviations, double *interpolatedF0)
 {
 	int i;
@@ -346,8 +346,8 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	double tmp;
 	for (i = 0; i <= fftl - 1; i++)
 	{
-		tmp = xSpec[i][0] * eSpec[i][0] - xSpec[i][1] * eSpec[i][1];
-		eSpec[i][1] = xSpec[i][0] * eSpec[i][1] + xSpec[i][1] * eSpec[i][0];
+		tmp = x_spec[i][0] * eSpec[i][0] - x_spec[i][1] * eSpec[i][1];
+		eSpec[i][1] = x_spec[i][0] * eSpec[i][1] + x_spec[i][1] * eSpec[i][0];
 		eSpec[i][0] = tmp;
 	}
 
@@ -356,7 +356,7 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	inverseFFT = fftw_plan_dft_c2r_1d(fftl, eSpec, equivalentFIR, FFTW_ESTIMATE);
 	fftw_execute(inverseFFT);
 	// バイアス（低域通過フィルタによる遅延）の除去
-	for (i = 0; i < xLength; i++)
+	for (i = 0; i < x_length; i++)
 		equivalentFIR[i] = equivalentFIR[i + indexBias];
 
 	// ４つのゼロ交差(構造体のほうがいいね) e:event, i:interval
@@ -364,35 +364,35 @@ void rawEventByDio(double boundaryF0, double fs, fftw_complex *xSpec, int xLengt
 	double *nILocations, *pILocations, *dnILocations, *dpILocations;
 	double *nIntervals, *pIntervals, *dnIntervals, *dpIntervals;
 	int nLen, pLen, dnLen, dpLen;
-	nELocations = (double *)malloc(sizeof(double) * xLength); // xLengthはかなりの保険
-	pELocations = (double *)malloc(sizeof(double) * xLength);
-	dnELocations = (double *)malloc(sizeof(double) * xLength);
-	dpELocations = (double *)malloc(sizeof(double) * xLength);
-	nILocations = (double *)malloc(sizeof(double) * xLength);
-	pILocations = (double *)malloc(sizeof(double) * xLength);
-	dnILocations = (double *)malloc(sizeof(double) * xLength);
-	dpILocations = (double *)malloc(sizeof(double) * xLength);
-	nIntervals = (double *)malloc(sizeof(double) * xLength);
-	pIntervals = (double *)malloc(sizeof(double) * xLength);
-	dnIntervals = (double *)malloc(sizeof(double) * xLength);
-	dpIntervals = (double *)malloc(sizeof(double) * xLength);
+	nELocations = (double *)malloc(sizeof(double) * x_length); // xLengthはかなりの保険
+	pELocations = (double *)malloc(sizeof(double) * x_length);
+	dnELocations = (double *)malloc(sizeof(double) * x_length);
+	dpELocations = (double *)malloc(sizeof(double) * x_length);
+	nILocations = (double *)malloc(sizeof(double) * x_length);
+	pILocations = (double *)malloc(sizeof(double) * x_length);
+	dnILocations = (double *)malloc(sizeof(double) * x_length);
+	dpILocations = (double *)malloc(sizeof(double) * x_length);
+	nIntervals = (double *)malloc(sizeof(double) * x_length);
+	pIntervals = (double *)malloc(sizeof(double) * x_length);
+	dnIntervals = (double *)malloc(sizeof(double) * x_length);
+	dpIntervals = (double *)malloc(sizeof(double) * x_length);
 
-	zeroCrossingEngine(equivalentFIR, xLength, fs,
+	zeroCrossingEngine(equivalentFIR, x_length, fs,
 					   nELocations, nILocations, nIntervals, &nLen);
 
-	for (i = 0; i < xLength; i++)
+	for (i = 0; i < x_length; i++)
 		equivalentFIR[i] = -equivalentFIR[i];
-	zeroCrossingEngine(equivalentFIR, xLength, fs,
+	zeroCrossingEngine(equivalentFIR, x_length, fs,
 					   pELocations, pILocations, pIntervals, &pLen);
 
-	for (i = 0; i < xLength - 1; i++)
+	for (i = 0; i < x_length - 1; i++)
 		equivalentFIR[i] = equivalentFIR[i] - equivalentFIR[i + 1];
-	zeroCrossingEngine(equivalentFIR, xLength - 1, fs,
+	zeroCrossingEngine(equivalentFIR, x_length - 1, fs,
 					   dnELocations, dnILocations, dnIntervals, &dnLen);
 
-	for (i = 0; i < xLength - 1; i++)
+	for (i = 0; i < x_length - 1; i++)
 		equivalentFIR[i] = -equivalentFIR[i];
-	zeroCrossingEngine(equivalentFIR, xLength - 1, fs,
+	zeroCrossingEngine(equivalentFIR, x_length - 1, fs,
 					   dpELocations, dpILocations, dpIntervals, &dpLen);
 
 	int usableChannel;
