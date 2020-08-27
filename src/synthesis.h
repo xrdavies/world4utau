@@ -1,8 +1,13 @@
 #ifndef _H_SYNTHESIS_
 #define _H_SYNTHESIS_
 
-#include "fftw3.h"
 #include <stdlib.h>
+
+#ifdef FFTW3
+#include "fftw3.h"
+#else
+#include "fft.h"
+#endif
 
 void getMinimumPhaseSpectrum(double *inputSpec, fftw_complex *spectrum, fftw_complex *cepstrum, int fftl);
 
