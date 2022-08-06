@@ -2,7 +2,7 @@
 
 *This branch is based on world4utau in http://utau2008.xrea.jp/mp3/engine_hikaku.html. The initial code in this repo is from https://github.com/Luk3M/world4utau which is not maintained for a long time.*
 
-It's ported to Linux / Mac including lots of optimizations, it's compatiable with OpenUATU and can be called by C#. So if you wanna use OpenUATU on Mac/Linux, this is your *only* option as far as I see.
+It's ported to Linux / Mac including lots of optimizations, it's compatiable with OpenUTAU and can be called by C#. So if you wanna use OpenUTAU on Mac/Linux, this is your *only* option as far as I see.
 
 # Build
 Currently support Ubunt and MacOS. To use windows version, please refer the original link.
